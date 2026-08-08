@@ -1,10 +1,17 @@
 import type {
   ActiveMixin,
   Catalog,
+  StackConfig,
 } from '../types.js';
 
 export interface ModuleResolution {
   modules: string[];
+}
+
+export interface StackResolution {
+  requestedModules: string[];
+  effectiveModules: string[];
+  activeMixins: ActiveMixin[];
 }
 
 export function resolveModules(
@@ -74,4 +81,31 @@ export function resolveMixins(
       reason: `Requires active modules: ${mixin.requiresAll.join(', ')}`,
       requiresAll: [...mixin.requiresAll],
     }));
+}
+
+export function resolveStack(
+  catalog: Catalog,
+  stack: Pick<StackConfig, 'modules' | 'presets'>,
+): StackResolution {
+  const requestedModules = new Set(stack.modules);
+
+  for (const presetId of [...new Set(stack.presets)].sort()) {
+    const preset = catalog.presets.get(presetId);
+    if (!preset) {
+      throw new Error(`Unknown preset: ${presetId}`);
+    }
+
+    for (const moduleId of preset.modules) {
+      requestedModules.add(moduleId);
+    }
+  }
+
+  const requested = [...requestedModules].sort();
+  const effectiveModules = resolveModules(catalog, requested).modules;
+
+  return {
+    requestedModules: requested,
+    effectiveModules,
+    activeMixins: resolveMixins(catalog, effectiveModules),
+  };
 }

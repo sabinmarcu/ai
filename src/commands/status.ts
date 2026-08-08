@@ -1,5 +1,6 @@
 import { Command } from 'clipanion';
 import { loadCatalog } from '../lib/catalog.js';
+import { resolveStack } from '../lib/resolve.js';
 import { readStack } from '../lib/stack.js';
 
 export class StatusCommand extends Command {
@@ -31,6 +32,25 @@ export class StatusCommand extends Command {
       for (const moduleId of unknownModules) {
         this.context.stdout.write(`- ${moduleId}\n`);
       }
+    }
+
+    const unknownPresets = stack.presets.filter((presetId) => !catalog.presets.has(presetId));
+    if (unknownPresets.length > 0) {
+      this.context.stdout.write('Unknown presets in stack:\n');
+      for (const presetId of unknownPresets) {
+        this.context.stdout.write(`- ${presetId}\n`);
+      }
+    }
+
+    if (unknownModules.length > 0 || unknownPresets.length > 0) {
+      return 1;
+    }
+
+    const resolution = resolveStack(catalog, stack);
+    this.context.stdout.write(`Effective modules: ${resolution.effectiveModules.length}\n`);
+    this.context.stdout.write(`Active mixins: ${resolution.activeMixins.length}\n`);
+    for (const mixin of resolution.activeMixins) {
+      this.context.stdout.write(`- ${mixin.id}: ${mixin.reason}\n`);
     }
 
     return 0;

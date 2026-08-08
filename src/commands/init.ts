@@ -3,8 +3,11 @@ import {
   Option,
 } from 'clipanion';
 import { loadCatalog } from '../lib/catalog.js';
-import { resolveModules } from '../lib/resolve.js';
-import { writeStack } from '../lib/stack.js';
+import { resolveStack } from '../lib/resolve.js';
+import {
+  STACK_VERSION,
+  writeStack,
+} from '../lib/stack.js';
 
 function collectArgumentValues(arguments_: string[], names: string[]): string[] {
   const values: string[] = [];
@@ -39,37 +42,23 @@ export class InitCommand extends Command {
     const presetIds = collectArgumentValues(this.args, ['--preset', '-p']);
     const explicitModules = collectArgumentValues(this.args, ['--module', '-m']);
 
-    const requestedModules = new Set<string>();
-
-    for (const presetId of presetIds) {
-      const preset = catalog.presets.get(presetId);
-      if (!preset) {
-        throw new Error(`Unknown preset: ${presetId}`);
-      }
-
-      for (const moduleId of preset.modules) {
-        requestedModules.add(moduleId);
-      }
+    if (presetIds.length === 0 && explicitModules.length === 0) {
+      explicitModules.push('global/core');
     }
 
-    for (const moduleId of explicitModules) {
-      requestedModules.add(moduleId);
-    }
-
-    if (requestedModules.size === 0) {
-      requestedModules.add('global/core');
-    }
-
-    const resolution = resolveModules(catalog, requestedModules);
+    const selectedStack = {
+      presets: [...new Set(presetIds)].sort(),
+      modules: [...new Set(explicitModules)].sort(),
+    };
+    const resolution = resolveStack(catalog, selectedStack);
 
     await writeStack(process.cwd(), {
-      version: 1,
+      version: STACK_VERSION,
       createdAt: new Date().toISOString(),
-      presets: presetIds,
-      modules: resolution.modules,
+      ...selectedStack,
     });
 
-    this.context.stdout.write(`Wrote .ai/stack.yml with ${resolution.modules.length} modules.\n`);
+    this.context.stdout.write(`Wrote .ai/stack.yml with ${resolution.effectiveModules.length} effective modules.\n`);
     return 0;
   }
 }

@@ -186,10 +186,10 @@ test('keeps ESLint and lint-staged independently selectable', async () => {
 
 test('loads Conventional Commits guidance through the global baseline', async () => {
   const catalog = await loadCatalog();
+  const { modules } = resolveModules(catalog, ['global/core']);
 
-  expect(resolveModules(catalog, ['global/core']).modules).toContain(
-    'guidance/conventional-commits',
-  );
+  expect(modules).toContain('guidance/commits');
+  expect(modules).toContain('guidance/conventional-commits');
 });
 
 test('keeps root-package policy out of the node-web application preset', async () => {
