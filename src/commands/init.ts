@@ -8,22 +8,13 @@ import {
   STACK_VERSION,
   writeStack,
 } from '../lib/stack.js';
+import type { StackConfig } from '../types.js';
 
-function collectArgumentValues(arguments_: string[], names: string[]): string[] {
-  const values: string[] = [];
-
-  for (let index = 0; index < arguments_.length; index += 1) {
-    const token = arguments_[index];
-    if (names.includes(token)) {
-      const next = arguments_[index + 1];
-      if (next && !next.startsWith('-')) {
-        values.push(next);
-        index += 1;
-      }
-    }
+export function parseAssetMode(value: string): StackConfig['assetMode'] {
+  if (value !== 'materialized' && value !== 'source') {
+    throw new Error(`Unsupported asset mode: ${value}. Expected materialized or source.`);
   }
-
-  return values;
+  return value;
 }
 
 export class InitCommand extends Command {
@@ -31,18 +22,33 @@ export class InitCommand extends Command {
 
   static usage = Command.Usage({
     description: 'Create .ai/stack.yml from selected presets and modules.',
-    details: 'Example: ai-lib init --preset node-web --module unix/zsh',
+    details: [
+      'Examples:',
+      '  ai-lib init --preset node-web --module unix/zsh',
+      '  ai-lib init --asset-mode source',
+      '',
+      'Asset modes: materialized (default) or source.',
+    ].join('\n'),
   });
 
-  args = Option.Proxy();
+  assetMode = Option.String('--asset-mode', 'materialized', {
+    description: 'Asset handling mode: materialized or source.',
+  });
+
+  presetIds = Option.Array('-p,--preset', [], {
+    description: 'Preset to include; may be repeated.',
+  });
+
+  explicitModules = Option.Array('-m,--module', [], {
+    description: 'Module to include; may be repeated.',
+  });
 
   async execute(): Promise<number> {
     const cwd = process.cwd();
-    const local = this.args.includes('--local');
-    const catalog = await loadCatalog(local ? cwd : undefined);
-
-    const presetIds = collectArgumentValues(this.args, ['--preset', '-p']);
-    const explicitModules = collectArgumentValues(this.args, ['--module', '-m']);
+    const assetMode = parseAssetMode(this.assetMode);
+    const explicitModules = [...this.explicitModules];
+    const presetIds = [...this.presetIds];
+    const catalog = await loadCatalog(assetMode === 'source' ? cwd : undefined);
 
     if (presetIds.length === 0 && explicitModules.length === 0) {
       explicitModules.push('global/core');
@@ -57,7 +63,7 @@ export class InitCommand extends Command {
     await writeStack(cwd, {
       version: STACK_VERSION,
       createdAt: new Date().toISOString(),
-      ...(local
+      ...(assetMode === 'source'
         ? {
           assetMode: 'source',
           catalogRoot: 'catalog',
@@ -67,7 +73,7 @@ export class InitCommand extends Command {
     });
 
     this.context.stdout.write(`Wrote .ai/stack.yml with ${resolution.effectiveModules.length} effective modules.\n`);
-    this.context.stdout.write(`Asset mode: ${local ? 'source' : 'materialized'}\n`);
+    this.context.stdout.write(`Asset mode: ${assetMode}\n`);
     return 0;
   }
 }

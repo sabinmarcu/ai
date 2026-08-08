@@ -1,8 +1,24 @@
 # Phase 03 - Stack Materialization and Drift Tracking
 
+Status: Complete (2026-08-08)
+
+## Completion Notes
+
+- Stack format version 2 persists either `materialized` asset mode or
+	repository-contained `source` asset mode.
+- Materialized mode copies and tracks managed assets. Source mode tracks only
+	the generated AI entrypoint and links directly to repository-relative
+	catalog and bootstrap sources.
+- Both modes use the same detection, resolution, reconciliation, drift, and
+	root-entrypoint workflows.
+- Unsupported stack versions fail strict validation. Cross-release migration
+	and compatibility policy remain Phase 4 responsibilities.
+
 ## Objective
 
-Materialize selected modules into consumer repositories while preserving vendored/shared integrity.
+Install selected modules into consumer repositories through copied managed
+assets or repository-contained source links while preserving shared-asset
+integrity.
 
 ## Deliverables
 
@@ -11,23 +27,64 @@ Materialize selected modules into consumer repositories while preserving vendore
 - Automatic mixin resolution from the effective module set.
 - `apply` implementation for managed path materialization.
 - `status` implementation for drift, missing files, and version mismatch.
+- Persistent asset-mode selection, with `init --asset-mode source` choosing
+	repository-contained source links instead of copied managed assets.
 - Local override path bootstrap and guardrails.
 - A baseline AI entrypoint that references the reconciliation skill and every
-  materialized module and active mixin AI asset.
-- A baseline stack reconciliation skill installed regardless of selected
-  modules.
+	active module and mixin AI asset according to the selected asset mode.
+- A baseline stack reconciliation skill installed or source-linked regardless
+	of selected modules.
+
+## Asset Modes
+
+Keep the CLI spelling separate from the persisted behavior:
+
+- `init` defaults to `assetMode: materialized`.
+- `init --asset-mode source` persists `assetMode: source` and a
+	repository-relative
+	`catalogRoot` in `.ai/stack.yml`.
+- `--asset-mode` is initialization syntax, not a flag that must be repeated.
+	Later `apply`, `status`, `verify`, and `reconcile` operations read the
+	persisted asset mode.
+
+Materialized mode copies baseline, module, and mixin assets into their managed
+paths. It remains the portable default for globally installed or package-run
+CLI use because consumer repositories do not depend on the installation source
+after application.
+
+Source mode is for a repository that contains the catalog and bootstrap
+sources it consumes. It must:
+
+- reject absolute `catalogRoot` values and paths that escape the target
+	repository
+- resolve catalog and bootstrap sources from the target repository rather than
+	the CLI installation
+- generate and track `.ai/AGENTS.md` without copying baseline, module, or mixin
+	assets
+- use repository-relative links from `.ai/AGENTS.md`; never emit absolute
+	filesystem paths
+- keep catalog source files outside managed drift tracking while continuing to
+	protect the generated entrypoint
+- retain the root AI instruction reference and repository-local override
+	boundaries used by materialized mode
+
+Switching from materialized mode to source mode removes unchanged stale managed
+copies through the normal reconciliation path and refuses to remove drifted
+stale files. Directly linked skills remain readable through the generated
+entrypoint, but a host may not discover them as slash commands unless they are
+also located in that host's native skill-discovery directory.
 
 ## Baseline AI Entrypoint
 
-Create one stable, generated entrypoint for installed AI files. It is bootstrap
+Create one stable, generated entrypoint for active AI files. It is bootstrap
 infrastructure rather than module-owned content and therefore exists even when
 no optional modules are selected.
 
 The entrypoint must:
 
 - reference the stack reconciliation skill
-- enumerate the currently materialized ordinary module and active mixin AI
-  assets in deterministic resolution order
+- enumerate the currently materialized or source-linked ordinary module and
+	active mixin AI assets in deterministic resolution order
 - distinguish managed shared assets from repository-local override locations
 - be regenerated from catalog and stack state rather than edited manually
 - avoid copying module guidance into the entrypoint
@@ -118,14 +175,33 @@ operations become necessary, replace them with operation-local cache instances.
 	effective stack state and produces a reviewable change summary.
 13. Materialize the baseline stack reconciliation skill independently of module
 	selection.
-14. Generate the stable AI entrypoint from the effective materialized assets
-	and update it after every successful apply or reconciliation.
+14. Generate the stable AI entrypoint from the effective assets according to
+	the persisted asset mode and update it after every successful apply or
+	reconciliation.
 15. Add the one-time root AI instruction reference without replacing existing
 	repository guidance.
+16. Add `init --asset-mode source` as the CLI interface for persistent source
+	asset mode.
+17. Load source-mode catalogs only from repository-contained, relative catalog
+	roots.
+18. Generate source-mode entrypoints with direct relative links to bootstrap,
+	module, and mixin source assets without copying those assets.
+19. Route `apply`, `status`, `verify`, and `reconcile` through the asset mode
+	persisted in stack state.
+20. Reconcile materialized-to-source transitions through existing stale-file
+	and drift protections.
 
 ## Exit Criteria
 
 - Fresh `init` + `apply` produces deterministic outputs.
+- Fresh `init --asset-mode source` persists source mode and produces only the
+	generated managed entrypoint, with repository-relative links to the active
+	bootstrap, module, and mixin sources.
+- Source mode rejects absolute or repository-escaping catalog roots.
+- Commands after initialization honor persisted source mode without requiring
+	`--asset-mode source` again.
+- Switching from materialized mode to source mode removes unchanged copied
+	assets and preserves drifted stale files for explicit review.
 - Identical effective module sets activate identical mixins regardless of preset
 	provenance or selection order.
 - Removing a required module deactivates its mixins and reconciles their managed
@@ -139,8 +215,8 @@ operations become necessary, replace them with operation-local cache instances.
 	reconciliation summary before stack or file mutations.
 - The baseline reconciliation skill and AI entrypoint exist with an otherwise
 	minimal stack.
-- The generated entrypoint references exactly the currently materialized module
-	and active mixin AI assets in deterministic order.
+- The generated entrypoint references exactly the currently materialized or
+	source-linked module and active mixin AI assets in deterministic order.
 - Reconciliation removes stale entrypoint references when modules or mixins
 	deactivate without modifying repository-local overrides.
 - Repeated reconciliation is a no-op and does not churn the root AI instruction

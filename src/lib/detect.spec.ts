@@ -12,6 +12,7 @@ import {
   expect,
   test,
 } from 'vitest';
+import type { Catalog } from '../types.js';
 import { loadCatalog } from './catalog.js';
 import {
   detectRepository,
@@ -155,6 +156,62 @@ test('activates mixins from each target dependency closure only', async () => {
   expect(webLibrary.activeMixins.map((mixin) => mixin.id)).toContain('mixin/typescript-eslint');
   expect(webLibrary.activeMixins.map((mixin) => mixin.id)).toContain('mixin/typescript-library');
   expect(webLibrary.activeMixins.map((mixin) => mixin.id)).toContain('mixin/react-eslint');
+});
+
+test('does not activate a mixin from modules detected in separate workspaces', () => {
+  const firstModule = {
+    id: 'test/first',
+    name: 'First',
+    description: 'First',
+    version: '1.0.0',
+    category: 'test',
+    managedPaths: [],
+    overridePaths: [],
+  };
+  const secondModule = {
+    ...firstModule,
+    id: 'test/second',
+    name: 'Second',
+    description: 'Second',
+  };
+  const catalog: Catalog = {
+    modules: new Map([
+      [firstModule.id, firstModule],
+      [secondModule.id, secondModule],
+    ]),
+    mixins: new Map([['mixin/cross-workspace', {
+      id: 'mixin/cross-workspace',
+      name: 'Cross workspace',
+      description: 'Cross workspace',
+      version: '1.0.0',
+      managedPaths: [],
+      overridePaths: [],
+      requiresAll: [firstModule.id, secondModule.id],
+    }]]),
+    presets: new Map(),
+  };
+  const resolved = resolveDetectedRepository(catalog, {
+    root: '/repo',
+    targets: [{
+      path: 'packages/first',
+      kind: 'project',
+      modules: [{
+        id: firstModule.id,
+        reason: 'Detected first.',
+        evidence: [],
+      }],
+    }, {
+      path: 'packages/second',
+      kind: 'project',
+      modules: [{
+        id: secondModule.id,
+        reason: 'Detected second.',
+        evidence: [],
+      }],
+    }],
+  });
+
+  expect(resolved.targets.map((target) => target.activeMixins)).toEqual([[], []]);
 });
 
 test('permits node tools as node libraries while keeping deployed apps and library runtimes exclusive', async () => {

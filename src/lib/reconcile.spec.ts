@@ -128,3 +128,50 @@ test('previews without mutation and applies the proposed stack and managed asset
     '## Managed Shared Assets',
   );
 });
+
+test('repeated reconciliation is a no-op without churning stack or AI files', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ai-lib-reconcile-repeat-'));
+  temporaryRoots.push(root);
+  await writeFile(path.join(root, 'package.json'), JSON.stringify({
+    name: 'fixture-reconcile-repeat',
+    devDependencies: {
+      '@types/node': '^24.0.0',
+      typescript: '^5.0.0',
+    },
+  }), 'utf8');
+  await writeFile(path.join(root, 'AGENTS.md'), '# Existing\n\nKeep this.\n', 'utf8');
+  const stack: StackConfig = {
+    version: 2,
+    createdAt: '2026-08-08T00:00:00.000Z',
+    assetMode: 'materialized',
+    presets: [],
+    modules: [],
+  };
+  const catalog = await loadCatalog();
+  const firstPlan = await planReconciliation(root, catalog, stack);
+  await applyReconciliation(root, firstPlan);
+  const paths = [
+    path.join(root, '.ai', 'stack.yml'),
+    path.join(root, '.ai', 'materialized.yml'),
+    path.join(root, '.ai', 'AGENTS.md'),
+    path.join(root, 'AGENTS.md'),
+  ];
+  const before = await Promise.all(paths.map((filePath) => readFile(filePath, 'utf8')));
+
+  const secondPlan = await planReconciliation(root, catalog, firstPlan.proposedStack);
+
+  expect(secondPlan.selectionAdditions).toEqual([]);
+  expect(secondPlan.selectionRemovals).toEqual([]);
+  expect(secondPlan.effectiveAdditions).toEqual([]);
+  expect(secondPlan.effectiveRemovals).toEqual([]);
+  expect(secondPlan.mixinAdditions).toEqual([]);
+  expect(secondPlan.mixinRemovals).toEqual([]);
+  expect(secondPlan.managedIssues).toEqual([]);
+  await expect(applyReconciliation(root, secondPlan)).resolves.toMatchObject({
+    addedRootReference: false,
+    removed: 0,
+  });
+  await expect(Promise.all(paths.map((filePath) => readFile(filePath, 'utf8')))).resolves.toEqual(
+    before,
+  );
+});
