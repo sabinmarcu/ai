@@ -1,0 +1,19 @@
+{
+    "id": "mixin/typescript-eslint",
+    "name": "TypeScript ESLint Integration",
+    "description": "TypeScript peer dependency and validation requirements for the shared ESLint configuration.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/typescript-eslint/"
+    ],
+    "sourceAssets": [
+        "files/instructions/typescript-eslint.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/typescript-eslint/"
+    ],
+    "requiresAll": [
+        "lang/typescript",
+        "tooling/eslint"
+    ]
+}

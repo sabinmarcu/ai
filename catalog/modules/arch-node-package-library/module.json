@@ -1,0 +1,20 @@
+{
+    "id": "arch/node-package-library",
+    "name": "Node Package Library Architecture",
+    "description": "Shared architecture and publication guardrails for Node package libraries.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/node-package-library/"
+    ],
+    "sourceAssets": [
+        "files/instructions/node-package-library-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/node-package-library/"
+    ],
+    "dependsOn": [
+        "arch/node-package"
+    ],
+    "conflictsWith": []
+}

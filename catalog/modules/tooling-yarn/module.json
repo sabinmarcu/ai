@@ -1,0 +1,20 @@
+{
+    "id": "tooling/yarn",
+    "name": "Yarn Configuration",
+    "description": "Yarn Modern configuration, linker selection, SDKs, and generated-file policy.",
+    "version": "0.1.0",
+    "category": "tooling",
+    "managedPaths": [
+        ".github/instructions/shared/yarn/"
+    ],
+    "sourceAssets": [
+        "files/instructions/yarn-configuration.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/yarn/"
+    ],
+    "dependsOn": [
+        "arch/node-package"
+    ],
+    "conflictsWith": []
+}

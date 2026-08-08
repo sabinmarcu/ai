@@ -1,0 +1,22 @@
+{
+    "id": "arch/node-library",
+    "name": "Node Library Architecture",
+    "description": "Architecture guardrails for publishable libraries targeting Node.js.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/node-library/"
+    ],
+    "sourceAssets": [
+        "files/instructions/node-library-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/node-library/"
+    ],
+    "dependsOn": [
+        "arch/node-package-library"
+    ],
+    "conflictsWith": [
+        "arch/web-library"
+    ]
+}

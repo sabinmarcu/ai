@@ -1,0 +1,19 @@
+{
+    "id": "mixin/husky-commitlint",
+    "name": "Husky Commitlint Integration",
+    "description": "Commit-message validation through a Husky commit-msg hook.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/husky-commitlint/"
+    ],
+    "sourceAssets": [
+        "files/instructions/husky-commitlint.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/husky-commitlint/"
+    ],
+    "requiresAll": [
+        "tooling/husky",
+        "tooling/commitlint"
+    ]
+}

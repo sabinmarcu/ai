@@ -1,0 +1,20 @@
+{
+  "id": "tooling/lint-staged",
+  "name": "lint-staged Configuration",
+  "description": "Staged-file task execution with lint-staged.",
+  "version": "0.1.0",
+  "category": "tooling",
+  "managedPaths": [
+    ".github/instructions/shared/lint-staged/"
+  ],
+  "sourceAssets": [
+    "files/instructions/lint-staged-configuration.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/lint-staged/"
+  ],
+  "dependsOn": [
+    "arch/node-package"
+  ],
+  "conflictsWith": []
+}

@@ -1,0 +1,22 @@
+# Yarn generated state
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# Local scratch space for trying consumer syncs.
+.ai-local/
+AGENTS.local.md
+
+# Repository-local task logs and reports.
+tmp/
+
+# Build output
+dist/
+node_modules/
+
+# TypeScript
+*.tsbuildinfo

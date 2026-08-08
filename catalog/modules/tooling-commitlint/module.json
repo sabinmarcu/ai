@@ -1,0 +1,20 @@
+{
+  "id": "tooling/commitlint",
+  "name": "Commitlint Configuration",
+  "description": "Commit-message validation infrastructure with commitlint.",
+  "version": "0.1.0",
+  "category": "tooling",
+  "managedPaths": [
+    ".github/instructions/shared/commitlint/"
+  ],
+  "sourceAssets": [
+    "files/instructions/commitlint-configuration.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/commitlint/"
+  ],
+  "dependsOn": [
+    "arch/node-package"
+  ],
+  "conflictsWith": []
+}

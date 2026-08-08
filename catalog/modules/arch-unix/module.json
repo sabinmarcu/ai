@@ -1,0 +1,26 @@
+{
+    "id": "arch/unix",
+    "name": "Unix Architecture Guardrails",
+    "description": "Operational, release, and safety guardrails for Unix configuration and shell repositories.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/unix/",
+        ".github/skills/unix-release-flow/"
+    ],
+    "sourceAssets": [
+        "files/instructions/unix-architecture.instructions.md",
+        "files/instructions/unix-validation.instructions.md",
+        "files/instructions/unix-release-policy.instructions.md",
+        "files/skills/unix-release-flow/SKILL.md",
+        "files/skills/unix-release-flow/assets/CHANGELOG.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/unix/",
+        ".github/skills/local/"
+    ],
+    "dependsOn": [
+        "global/core"
+    ],
+    "conflictsWith": []
+}

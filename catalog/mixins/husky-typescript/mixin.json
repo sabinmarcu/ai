@@ -1,0 +1,19 @@
+{
+    "id": "mixin/husky-typescript",
+    "name": "Husky TypeScript Integration",
+    "description": "TypeScript validation in Husky-managed pre-commit hooks.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/husky-typescript/"
+    ],
+    "sourceAssets": [
+        "files/instructions/husky-typescript.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/husky-typescript/"
+    ],
+    "requiresAll": [
+        "tooling/husky",
+        "lang/typescript"
+    ]
+}

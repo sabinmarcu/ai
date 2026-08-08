@@ -1,0 +1,27 @@
+{
+  "id": "lang/typescript",
+  "name": "TypeScript Architecture",
+  "description": "TypeScript architecture guardrails for scripts, tsconfig layout, and monorepo/project structure.",
+  "version": "0.1.0",
+  "category": "language",
+  "managedPaths": [
+    ".github/instructions/shared/typescript/"
+  ],
+  "sourceAssets": [
+    "files/instructions/typescript-architecture.instructions.md",
+    "files/instructions/typescript-function-namespace-types.instructions.md",
+    "files/instructions/typescript-build-and-scripts.instructions.md",
+    "files/instructions/typescript-tsconfig-layout.instructions.md",
+    "files/instructions/typescript-runtime-validation.instructions.md",
+    "files/instructions/typescript-node-api-typings.instructions.md",
+    "files/instructions/typescript-native-execution.instructions.md",
+    "files/instructions/typescript-testing.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/typescript/"
+  ],
+  "dependsOn": [
+    "global/core"
+  ],
+  "conflictsWith": []
+}

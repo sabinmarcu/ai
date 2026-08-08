@@ -1,0 +1,19 @@
+{
+    "id": "mixin/react-eslint",
+    "name": "React ESLint Integration",
+    "description": "React peer dependency, TSX coverage, hooks, and accessibility requirements for the shared ESLint configuration.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/react-eslint/"
+    ],
+    "sourceAssets": [
+        "files/instructions/react-eslint.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/react-eslint/"
+    ],
+    "requiresAll": [
+        "arch/web-react",
+        "tooling/eslint"
+    ]
+}

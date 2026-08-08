@@ -1,0 +1,70 @@
+{
+  "name": "@sabinmarcu/ai",
+  "version": "0.0.0",
+  "description": "Composable AI bootstrap CLI and module catalog for isolated repositories.",
+  "packageManager": "yarn@4.17.0",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.5.0",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "yarn",
+      "version": "4.17.0",
+      "onFail": "error"
+    }
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "type": "module",
+  "bin": "./dist/cli.js",
+  "files": [
+    "dist",
+    "catalog"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "yarn build",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "cli": "tsx src/cli.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint-staged": "lint-staged",
+    "commitlint": "commitlint --edit",
+    "prepare": "husky",
+    "check": "yarn test && yarn typecheck && yarn lint:fix"
+  },
+  "dependencies": {
+    "@sabinmarcu/utils-repo": "2.0.6",
+    "clipanion": "^4.0.0-rc.4",
+    "yaml": "^2.8.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/js": "^9.34.0",
+    "@sabinmarcu/eslint-config": "latest",
+    "@types/node": "^24.0.0",
+    "@typescript-eslint/types": "^8.46.1",
+    "eslint": "^9.34.0",
+    "eslint-import-resolver-exports": "^1.0.0-beta.5",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "globals": "^16.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.41.0",
+    "vitest": "^4.1.10"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,tsx,mts,cts,jsx}": [
+      "yarn lint:fix"
+    ]
+  }
+}

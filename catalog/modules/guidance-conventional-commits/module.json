@@ -1,0 +1,18 @@
+{
+  "id": "guidance/conventional-commits",
+  "name": "Conventional Commits Guidance",
+  "description": "Universal commit-authoring guidance based on Conventional Commits.",
+  "version": "0.1.0",
+  "category": "guidance",
+  "managedPaths": [
+    ".github/instructions/shared/conventional-commits/"
+  ],
+  "sourceAssets": [
+    "files/instructions/conventional-commits.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/conventional-commits/"
+  ],
+  "dependsOn": [],
+  "conflictsWith": []
+}

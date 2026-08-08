@@ -1,0 +1,20 @@
+{
+    "id": "mixin/husky-yarn-monorepo",
+    "name": "Husky Yarn Monorepo Integration",
+    "description": "Yarn constraints and release-version validation in monorepo pre-commit hooks.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/husky-yarn-monorepo/"
+    ],
+    "sourceAssets": [
+        "files/instructions/husky-yarn-monorepo.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/husky-yarn-monorepo/"
+    ],
+    "requiresAll": [
+        "tooling/husky",
+        "tooling/yarn",
+        "arch/monorepo"
+    ]
+}

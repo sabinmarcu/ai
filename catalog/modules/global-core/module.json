@@ -1,0 +1,27 @@
+{
+  "id": "global/core",
+  "name": "Global Core Guardrails",
+  "description": "Baseline guardrails and override conventions for every project.",
+  "version": "0.1.0",
+  "category": "global",
+  "managedPaths": [
+    ".github/instructions/shared/",
+    ".github/prompts/shared/",
+    ".github/skills/"
+  ],
+  "sourceAssets": [
+    "files/instructions/global-repo-local-agent-notes.instructions.md",
+    "files/instructions/global-repo-tmp.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/",
+    ".github/prompts/local/",
+    ".github/skills/local/",
+    ".github/agents/local/",
+    ".ai-local/"
+  ],
+  "dependsOn": [
+    "guidance/conventional-commits"
+  ],
+  "conflictsWith": []
+}

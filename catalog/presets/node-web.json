@@ -1,0 +1,14 @@
+{
+  "id": "node-web",
+  "name": "Node Web Application",
+  "description": "Composable baseline for TypeScript-driven Node web projects.",
+  "modules": [
+    "global/core",
+    "tooling/yarn",
+    "lang/typescript",
+    "guardrails/web-platform",
+    "guardrails/web-style",
+    "arch/web-react",
+    "arch/web-application"
+  ]
+}

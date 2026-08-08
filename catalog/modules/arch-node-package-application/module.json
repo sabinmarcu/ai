@@ -1,0 +1,20 @@
+{
+    "id": "arch/node-package-application",
+    "name": "Node Package Application Architecture",
+    "description": "Shared architecture guardrails for deployable and executable Node package projects.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/node-package-application/"
+    ],
+    "sourceAssets": [
+        "files/instructions/node-package-application-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/node-package-application/"
+    ],
+    "dependsOn": [
+        "arch/node-package"
+    ],
+    "conflictsWith": []
+}

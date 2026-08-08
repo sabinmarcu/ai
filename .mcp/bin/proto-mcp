@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+PATH="$HOME/.proto/bin:$PATH"
+exec proto mcp

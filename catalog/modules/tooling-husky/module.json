@@ -1,0 +1,20 @@
+{
+  "id": "tooling/husky",
+  "name": "Husky Configuration",
+  "description": "Husky lifecycle and modern Git hook configuration for Node projects.",
+  "version": "0.1.0",
+  "category": "tooling",
+  "managedPaths": [
+    ".github/instructions/shared/husky/"
+  ],
+  "sourceAssets": [
+    "files/instructions/husky-configuration.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/husky/"
+  ],
+  "dependsOn": [
+    "arch/node-package"
+  ],
+  "conflictsWith": []
+}

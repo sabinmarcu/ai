@@ -1,0 +1,19 @@
+{
+  "id": "mixin/eslint-lint-staged",
+  "name": "ESLint lint-staged Integration",
+  "description": "Fix staged JavaScript and TypeScript files with ESLint through lint-staged.",
+  "version": "0.1.0",
+  "managedPaths": [
+    ".github/instructions/shared/mixins/eslint-lint-staged/"
+  ],
+  "sourceAssets": [
+    "files/instructions/eslint-lint-staged.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/mixins/eslint-lint-staged/"
+  ],
+  "requiresAll": [
+    "tooling/eslint",
+    "tooling/lint-staged"
+  ]
+}

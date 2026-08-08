@@ -1,0 +1,25 @@
+{
+  "id": "arch/node-application",
+  "name": "Node Application Architecture",
+  "description": "Architecture guardrails for deployable Node.js servers and services.",
+  "version": "0.1.0",
+  "category": "architecture",
+  "managedPaths": [
+    ".github/instructions/shared/node-application/"
+  ],
+  "sourceAssets": [
+    "files/instructions/node-architecture.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/node-application/"
+  ],
+  "dependsOn": [
+    "arch/node-package-application"
+  ],
+  "conflictsWith": [
+    "arch/node-library",
+    "arch/node-tool",
+    "arch/web-application",
+    "arch/web-library"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+    "id": "mixin/conventional-commits-monorepo",
+    "name": "Conventional Commits Monorepo Guidance",
+    "description": "Workspace-aware Conventional Commit scope guidance for monorepos.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/conventional-commits-monorepo/"
+    ],
+    "sourceAssets": [
+        "files/instructions/conventional-commits-monorepo.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/conventional-commits-monorepo/"
+    ],
+    "requiresAll": [
+        "guidance/conventional-commits",
+        "arch/monorepo"
+    ]
+}

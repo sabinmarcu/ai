@@ -1,0 +1,24 @@
+{
+    "id": "arch/monorepo",
+    "name": "Monorepo Architecture",
+    "description": "Architecture guardrails for repositories containing multiple coordinated projects.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/monorepo/"
+    ],
+    "sourceAssets": [
+        "files/instructions/monorepo-architecture.instructions.md",
+        "files/instructions/monorepo-task-graph.instructions.md",
+        "files/instructions/monorepo-dependency-policy.instructions.md",
+        "files/instructions/monorepo-validation.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/monorepo/"
+    ],
+    "dependsOn": [
+        "global/core",
+        "arch/node-root-package"
+    ],
+    "conflictsWith": []
+}

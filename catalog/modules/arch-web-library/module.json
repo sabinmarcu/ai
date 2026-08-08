@@ -1,0 +1,23 @@
+{
+    "id": "arch/web-library",
+    "name": "Web Library Architecture",
+    "description": "Architecture guardrails for publishable libraries targeting browsers.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/web-library/"
+    ],
+    "sourceAssets": [
+        "files/instructions/web-library-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/web-library/"
+    ],
+    "dependsOn": [
+        "arch/node-package-library",
+        "guardrails/web-platform"
+    ],
+    "conflictsWith": [
+        "arch/node-library"
+    ]
+}

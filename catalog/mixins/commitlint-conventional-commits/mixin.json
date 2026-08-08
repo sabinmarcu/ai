@@ -1,0 +1,19 @@
+{
+    "id": "mixin/commitlint-conventional-commits",
+    "name": "Commitlint Conventional Commits Integration",
+    "description": "Commitlint enforcement for Conventional Commits guidance.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/commitlint-conventional-commits/"
+    ],
+    "sourceAssets": [
+        "files/instructions/commitlint-conventional-commits.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/commitlint-conventional-commits/"
+    ],
+    "requiresAll": [
+        "tooling/commitlint",
+        "guidance/conventional-commits"
+    ]
+}

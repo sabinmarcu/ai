@@ -1,0 +1,20 @@
+{
+    "id": "guardrails/web-platform",
+    "name": "Modern Web Platform Guardrails",
+    "description": "Browser support and native web API policy for modern web applications.",
+    "version": "0.1.0",
+    "category": "guardrail",
+    "managedPaths": [
+        ".github/instructions/shared/web-platform/"
+    ],
+    "sourceAssets": [
+        "files/instructions/web-platform.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/web-platform/"
+    ],
+    "dependsOn": [
+        "global/core"
+    ],
+    "conflictsWith": []
+}

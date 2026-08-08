@@ -1,0 +1,20 @@
+{
+    "id": "mixin/commitlint-monorepo-scopes",
+    "name": "Commitlint Monorepo Scope Integration",
+    "description": "Commitlint enforcement for workspace-aware monorepo scopes.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/commitlint-monorepo-scopes/"
+    ],
+    "sourceAssets": [
+        "files/instructions/commitlint-monorepo-scopes.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/commitlint-monorepo-scopes/"
+    ],
+    "requiresAll": [
+        "tooling/commitlint",
+        "guidance/conventional-commits",
+        "arch/monorepo"
+    ]
+}

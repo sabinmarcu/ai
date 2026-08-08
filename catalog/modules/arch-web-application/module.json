@@ -1,0 +1,26 @@
+{
+    "id": "arch/web-application",
+    "name": "Web Application Architecture",
+    "description": "Architecture guardrails for deployable applications that serve browsers.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/web-application/"
+    ],
+    "sourceAssets": [
+        "files/instructions/web-application-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/web-application/"
+    ],
+    "dependsOn": [
+        "arch/node-package-application",
+        "guardrails/web-platform"
+    ],
+    "conflictsWith": [
+        "arch/node-application",
+        "arch/node-library",
+        "arch/node-tool",
+        "arch/web-library"
+    ]
+}

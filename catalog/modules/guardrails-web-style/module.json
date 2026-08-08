@@ -1,0 +1,22 @@
+{
+  "id": "guardrails/web-style",
+  "name": "Web Styling Guardrails",
+  "description": "Styling and frontend direction for repositories containing web applications.",
+  "version": "0.1.0",
+  "category": "guardrail",
+  "managedPaths": [
+    ".github/instructions/shared/frontend/"
+  ],
+  "sourceAssets": [
+    "files/instructions/web-styling.instructions.md",
+    "files/instructions/web-accessibility.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/frontend/"
+  ],
+  "dependsOn": [
+    "global/core",
+    "guardrails/web-platform"
+  ],
+  "conflictsWith": []
+}

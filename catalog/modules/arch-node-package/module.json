@@ -1,0 +1,24 @@
+{
+  "id": "arch/node-package",
+  "name": "Node Project Architecture",
+  "description": "Common architecture guardrails for every project containing a package.json.",
+  "version": "0.1.0",
+  "category": "architecture",
+  "managedPaths": [
+    ".github/instructions/shared/node-package/"
+  ],
+  "sourceAssets": [
+    "files/instructions/node-package-architecture.instructions.md",
+    "files/instructions/node-package-package-managers.instructions.md",
+    "files/instructions/node-package-proto.instructions.md",
+    "files/instructions/node-package-eslint-prettier-policy.instructions.md",
+    "files/instructions/node-package-editor-prettier-disable.instructions.md"
+  ],
+  "overridePaths": [
+    ".github/instructions/local/node-package/"
+  ],
+  "dependsOn": [
+    "global/core"
+  ],
+  "conflictsWith": []
+}

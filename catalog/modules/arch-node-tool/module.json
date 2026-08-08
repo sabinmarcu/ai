@@ -1,0 +1,24 @@
+{
+    "id": "arch/node-tool",
+    "name": "Node Tool Architecture",
+    "description": "Architecture guardrails for one-off Node.js executables used by developers and CI.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/node-tool/"
+    ],
+    "sourceAssets": [
+        "files/instructions/node-tool-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/node-tool/"
+    ],
+    "dependsOn": [
+        "arch/node-package-application",
+        "arch/node-library"
+    ],
+    "conflictsWith": [
+        "arch/node-application",
+        "arch/web-application"
+    ]
+}

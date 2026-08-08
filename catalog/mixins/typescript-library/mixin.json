@@ -1,0 +1,19 @@
+{
+    "id": "mixin/typescript-library",
+    "name": "TypeScript Library Integration",
+    "description": "TypeScript build and declaration output requirements for publishable libraries.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/typescript-library/"
+    ],
+    "sourceAssets": [
+        "files/instructions/typescript-library.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/typescript-library/"
+    ],
+    "requiresAll": [
+        "arch/node-package-library",
+        "lang/typescript"
+    ]
+}

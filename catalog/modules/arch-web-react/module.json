@@ -1,0 +1,22 @@
+{
+    "id": "arch/web-react",
+    "name": "Web React Architecture",
+    "description": "Web React component ownership, state selection, models, data, and effect boundaries.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/web-react/"
+    ],
+    "sourceAssets": [
+        "files/instructions/web-react-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/web-react/"
+    ],
+    "dependsOn": [
+        "global/core",
+        "guardrails/web-style",
+        "guardrails/web-platform"
+    ],
+    "conflictsWith": []
+}

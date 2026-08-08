@@ -1,0 +1,8 @@
+{
+  "id": "universal",
+  "name": "Universal Baseline",
+  "description": "Global defaults that apply to all repositories.",
+  "modules": [
+    "global/core"
+  ]
+}

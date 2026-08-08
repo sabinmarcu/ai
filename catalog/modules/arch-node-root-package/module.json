@@ -1,0 +1,24 @@
+{
+    "id": "arch/node-root-package",
+    "name": "Node Root Package Architecture",
+    "description": "Repository-root Node package policy for monorepos and standalone packages.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/node-root-package/"
+    ],
+    "sourceAssets": [
+        "files/instructions/node-root-package-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/node-root-package/"
+    ],
+    "dependsOn": [
+        "arch/node-package",
+        "tooling/commitlint",
+        "tooling/eslint",
+        "tooling/husky",
+        "tooling/lint-staged"
+    ],
+    "conflictsWith": []
+}

@@ -1,0 +1,19 @@
+{
+    "id": "mixin/husky-lint-staged",
+    "name": "Husky lint-staged Integration",
+    "description": "Run lint-staged from a Husky-managed pre-commit hook.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/husky-lint-staged/"
+    ],
+    "sourceAssets": [
+        "files/instructions/husky-lint-staged.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/husky-lint-staged/"
+    ],
+    "requiresAll": [
+        "tooling/husky",
+        "tooling/lint-staged"
+    ]
+}

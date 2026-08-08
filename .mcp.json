@@ -1,0 +1,15 @@
+{
+    "mcpServers": {
+        "proto": {
+            "type": "stdio",
+            "command": "./.mcp/bin/proto-mcp",
+            "args": [
+                "mcp"
+            ]
+        },
+        "vitest": {
+            "type": "stdio",
+            "command": "./.mcp/bin/vitest-mcp"
+        }
+    }
+}
