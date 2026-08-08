@@ -7,8 +7,10 @@ import {
 import { ApplyCommand } from './commands/apply.js';
 import { DetectCommand } from './commands/detect.js';
 import { InitCommand } from './commands/init.js';
+import { ReconcileCommand } from './commands/reconcile.js';
 import { StatusCommand } from './commands/status.js';
 import { VerifyCommand } from './commands/verify.js';
+import { withRepoUtilityCacheScope } from './lib/repo-utility-cache.js';
 
 const cli = new Cli({
   binaryLabel: 'AI Library CLI',
@@ -19,9 +21,12 @@ const cli = new Cli({
 cli.register(ApplyCommand);
 cli.register(DetectCommand);
 cli.register(InitCommand);
+cli.register(ReconcileCommand);
 cli.register(StatusCommand);
 cli.register(VerifyCommand);
 cli.register(Builtins.HelpCommand);
 cli.register(Builtins.VersionCommand);
 
-await cli.runExit(process.argv.slice(2), Cli.defaultContext);
+await withRepoUtilityCacheScope(() => (
+  cli.runExit(process.argv.slice(2), Cli.defaultContext)
+));

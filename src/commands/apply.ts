@@ -1,4 +1,11 @@
 import { Command } from 'clipanion';
+import { loadCatalog } from '../lib/catalog.js';
+import {
+  applyMaterialization,
+  buildCompleteMaterializationPlan,
+  ensureRootEntrypointReference,
+} from '../lib/materialize.js';
+import { resolveStack } from '../lib/resolve.js';
 import { readStack } from '../lib/stack.js';
 
 export class ApplyCommand extends Command {
@@ -6,7 +13,7 @@ export class ApplyCommand extends Command {
 
   static usage = Command.Usage({
     description: 'Apply managed module assets to the current repository.',
-    details: 'Phase 01 provides scaffolding only. Materialization lands in Phase 03.',
+    details: 'Materialize effective module and active mixin assets, repairing managed drift.',
   });
 
   async execute(): Promise<number> {
@@ -15,8 +22,15 @@ export class ApplyCommand extends Command {
       throw new Error('No .ai/stack.yml found. Run `ai-lib init` first.');
     }
 
-    this.context.stdout.write('Apply is currently a scaffold placeholder.\n');
-    this.context.stdout.write(`Stack has ${stack.modules.length} modules selected.\n`);
+    const catalog = await loadCatalog();
+    const resolution = resolveStack(catalog, stack);
+    const plan = await buildCompleteMaterializationPlan(catalog, resolution);
+    const result = await applyMaterialization(process.cwd(), plan);
+    const addedRootReference = await ensureRootEntrypointReference(process.cwd());
+
+    this.context.stdout.write(`Applied ${result.files} managed files.\n`);
+    this.context.stdout.write(`Removed ${result.removed} stale managed files.\n`);
+    this.context.stdout.write(`Root AI reference: ${addedRootReference ? 'added' : 'current'}\n`);
     return 0;
   }
 }

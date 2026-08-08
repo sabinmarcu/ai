@@ -246,3 +246,16 @@ test('clears every exported utility cache after workspace topology changes', asy
   expect(clearRepoUtilityCaches()).toBeGreaterThan(0);
   expect(getWorkspacesPaths.sync(root)).toHaveLength(5);
 });
+
+test('detects filesystem changes across operation cache boundaries', async () => {
+  const root = await createMonorepo();
+  const catalog = await loadCatalog();
+
+  await expect(detectRepository(catalog, root)).resolves.toHaveProperty('targets.length', 5);
+  await mkdir(path.join(root, 'packages', 'new-package'), { recursive: true });
+  await writeFile(path.join(root, 'packages', 'new-package', 'package.json'), JSON.stringify({
+    name: 'fixture-new-package',
+  }), 'utf8');
+
+  await expect(detectRepository(catalog, root)).resolves.toHaveProperty('targets.length', 6);
+});

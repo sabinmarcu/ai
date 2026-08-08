@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
 // Invalidation must traverse every public utility export.
 // eslint-disable-next-line import/no-namespace
 import * as repoUtilities from '@sabinmarcu/utils-repo';
@@ -7,6 +8,11 @@ interface MoizedFunction {
   clear(): unknown;
   isMoized: true;
 }
+
+let operationQueue = Promise.resolve();
+const operationScope = new AsyncLocalStorage<boolean>();
+
+function noop(): void {}
 
 function isMoizedFunction(value: unknown): value is MoizedFunction {
   return typeof value === 'function'
@@ -48,22 +54,25 @@ export function clearRepoUtilityCaches(): number {
   return memoizedFunctions.size;
 }
 
-export function withRepoUtilityCacheScopeSync<T>(operation: () => T): T {
-  clearRepoUtilityCaches();
-  try {
-    return operation();
-  } finally {
-    clearRepoUtilityCaches();
-  }
-}
-
 export async function withRepoUtilityCacheScope<T>(
   operation: () => Promise<T> | T,
 ): Promise<T> {
+  if (operationScope.getStore()) {
+    return operation();
+  }
+
+  const previousOperation = operationQueue;
+  let releaseOperation: () => void = noop;
+  operationQueue = new Promise<void>((resolve) => {
+    releaseOperation = resolve;
+  });
+
+  await previousOperation;
   clearRepoUtilityCaches();
   try {
-    return await operation();
+    return await operationScope.run(true, operation);
   } finally {
     clearRepoUtilityCaches();
+    releaseOperation();
   }
 }

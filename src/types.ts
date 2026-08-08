@@ -67,6 +67,7 @@ export interface ModuleManifest {
   name: string;
   description: string;
   version: string;
+  sourceRoot?: string;
   category: string;
   managedPaths: string[];
   sourceAssets?: string[];
@@ -88,6 +89,7 @@ export interface MixinManifest {
   name: string;
   description: string;
   version: string;
+  sourceRoot?: string;
   managedPaths: string[];
   sourceAssets?: string[];
   overridePaths: string[];

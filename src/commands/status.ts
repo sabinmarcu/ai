@@ -1,5 +1,9 @@
 import { Command } from 'clipanion';
 import { loadCatalog } from '../lib/catalog.js';
+import {
+  buildCompleteMaterializationPlan,
+  inspectMaterialization,
+} from '../lib/materialize.js';
 import { resolveStack } from '../lib/resolve.js';
 import { readStack } from '../lib/stack.js';
 
@@ -53,6 +57,19 @@ export class StatusCommand extends Command {
       this.context.stdout.write(`- ${mixin.id}: ${mixin.reason}\n`);
     }
 
-    return 0;
+    const plan = await buildCompleteMaterializationPlan(catalog, resolution);
+    const issues = await inspectMaterialization(process.cwd(), plan);
+    this.context.stdout.write(`Managed files: ${plan.length}\n`);
+    if (issues.length === 0) {
+      this.context.stdout.write('Managed status: current\n');
+      return 0;
+    }
+
+    this.context.stdout.write('Managed issues:\n');
+    for (const issue of issues) {
+      this.context.stdout.write(`- ${issue.kind}: ${issue.path} (${issue.ownerId})\n`);
+    }
+
+    return 1;
   }
 }

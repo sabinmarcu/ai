@@ -236,6 +236,7 @@ export async function loadCatalog(packageRoot = getPackageRoot()): Promise<Catal
         assertRelativePath('Module', manifest.id, 'sourceAssets', sourceAsset);
         await assertSourceAsset(moduleRoot, 'Module', manifest.id, sourceAsset);
       }
+      manifest.sourceRoot = moduleRoot;
       manifest.detect = await loadModuleDetector(moduleRoot, manifest.id);
       assertUniqueValues('Module', manifest.id, 'managedPaths', manifest.managedPaths);
       assertUniqueValues('Module', manifest.id, 'sourceAssets', manifest.sourceAssets ?? []);
@@ -270,6 +271,7 @@ export async function loadCatalog(packageRoot = getPackageRoot()): Promise<Catal
         assertRelativePath('Mixin', manifest.id, 'sourceAssets', sourceAsset);
         await assertSourceAsset(mixinRoot, 'Mixin', manifest.id, sourceAsset);
       }
+      manifest.sourceRoot = mixinRoot;
       assertUniqueValues('Mixin', manifest.id, 'managedPaths', manifest.managedPaths);
       assertUniqueValues('Mixin', manifest.id, 'sourceAssets', manifest.sourceAssets ?? []);
       assertUniqueValues('Mixin', manifest.id, 'overridePaths', manifest.overridePaths);
