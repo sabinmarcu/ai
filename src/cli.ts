@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { createRequire } from 'node:module';
 import {
   Builtins,
   Cli,
@@ -12,10 +13,12 @@ import { StatusCommand } from './commands/status.js';
 import { VerifyCommand } from './commands/verify.js';
 import { withRepoUtilityCacheScope } from './lib/repo-utility-cache.js';
 
+const packageManifest = createRequire(import.meta.url)('../package.json') as { version: string };
+
 const cli = new Cli({
   binaryLabel: 'AI Library CLI',
   binaryName: 'ai-lib',
-  binaryVersion: '0.1.0',
+  binaryVersion: packageManifest.version,
 });
 
 cli.register(ApplyCommand);

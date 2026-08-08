@@ -33,12 +33,12 @@ workstreams should be implemented and validated incrementally.
    module applicability expects files that do not exist yet.
 10. Support monorepos in the state model before adding monorepo bootstrap
     behavior.
-11. Make `smai init` the convergent full bootstrap and expose `repo`, `tool`,
+11. Make `ai init` the convergent full bootstrap and expose `repo`, `tool`,
   and `mcp` init modes for partial setup.
 12. Treat Git as universal repository foundation, while creating a Yarn/Node
   project only for explicitly selected Node repositories.
 13. Use a project-local `@sabinmarcu/ai` development dependency and
-  `yarn exec smai-mcp` in Node repositories.
+  `yarn exec ai-mcp` in Node repositories.
 14. Keep Unix repositories free of an artificial `package.json`; configure
   their MCP server through an exact-version Yarn `dlx` invocation.
 15. Use `dlx` as the initial installer bridge, not as the default persistent
@@ -138,13 +138,13 @@ stack model for bootstrap planning and does not own those implementations.
 ## Package Entrypoints
 
 Change the package from a single `bin` string to an explicit binary map with
-`smai` as the CLI and `smai-mcp` as the MCP server:
+`ai` as the CLI and `ai-mcp` as the MCP server:
 
 ```json
 {
   "bin": {
-    "smai": "./dist/cli.js",
-    "smai-mcp": "./dist/mcp.js"
+    "ai": "./dist/cli.js",
+    "ai-mcp": "./dist/mcp.js"
   }
 }
 ```
@@ -159,12 +159,13 @@ state share validation rules.
 The unambiguous one-shot bootstrap command is:
 
 ```sh
-yarn dlx --package @sabinmarcu/ai smai init --type node
+yarn dlx @sabinmarcu/ai init --type node
 ```
 
-The package name and binary name differ, so documentation must use Yarn's
-`--package` option rather than implying that `yarn dlx @sabinmarcu/ai init`
-will resolve `smai` automatically.
+The `ai` binary matches the unscoped portion of `@sabinmarcu/ai`, so npm and
+Yarn package runners can select it as the default executable. The secondary
+`ai-mcp` binary does not match the package name and must use explicit
+package-to-binary mapping when it is launched through `dlx`.
 
 ## Core Domain Model
 
@@ -468,22 +469,22 @@ The CLI should expose the same engine operations in human-oriented form. An
 illustrative command surface is:
 
 ```text
-smai init --type node
-smai init --type unix
-smai init repo --type node
-smai init tool
-smai init mcp
-smai inspect
-smai bootstrap arch/monorepo --plan
-smai project add apps/web --arch arch/web-application --module arch/web-react --plan
-smai configure tooling/eslint --scope . --coverage descendants --plan
-smai apply <plan>
-smai status
-smai verify
-smai mcp
+ai init --type node
+ai init --type unix
+ai init repo --type node
+ai init tool
+ai init mcp
+ai inspect
+ai bootstrap arch/monorepo --plan
+ai project add apps/web --arch arch/web-application --module arch/web-react --plan
+ai configure tooling/eslint --scope . --coverage descendants --plan
+ai apply <plan>
+ai status
+ai verify
+ai mcp
 ```
 
-Whether `smai-mcp` starts a dedicated binary or delegates to `smai mcp` is an
+Whether `ai-mcp` starts a dedicated binary or delegates to `ai mcp` is an
 adapter detail. Both must start the same MCP server implementation if both are
 supported.
 
@@ -494,20 +495,20 @@ prompts may be added later but must not be required by the engine.
 
 ### Command Contracts
 
-`smai init` is the idempotent full bootstrap. It composes these narrower
+`ai init` is the idempotent full bootstrap. It composes these narrower
 operations in dependency order:
 
 ```text
-smai init repo    # repository foundation
-smai init tool    # SMAI runtime and AI workflow assets
-smai init mcp     # MCP server configuration
+ai init repo    # repository foundation
+ai init tool    # package runtime and AI workflow assets
+ai init mcp     # MCP server configuration
 ```
 
 Rules:
 
-- `smai init --type node` runs repository, tool, and MCP initialization for a
+- `ai init --type node` runs repository, tool, and MCP initialization for a
   Node repository.
-- `smai init --type unix` runs repository, tool, and MCP initialization without
+- `ai init --type unix` runs repository, tool, and MCP initialization without
   creating a Node project.
 - An empty directory requires `--type node|unix` in non-interactive use. An
   interactive adapter may ask rather than guess.
@@ -518,7 +519,7 @@ Rules:
   skill are present, then adds the generic bootstrap skill. In a Node repository
   it also adds the exact running version of `@sabinmarcu/ai` to
   `devDependencies` and updates the lockfile.
-- `init mcp` structurally merges the `smai` server into the supported MCP
+- `init mcp` structurally merges the `ai` server into the supported MCP
   configuration without replacing unrelated servers.
 - Partial commands validate their prerequisites and provide the exact prior
   command needed when a prerequisite is absent.
@@ -539,10 +540,10 @@ uses the lockfile-managed project binary:
 ```json
 {
   "mcpServers": {
-    "smai": {
+    "ai": {
       "type": "stdio",
       "command": "yarn",
-      "args": ["exec", "smai-mcp"]
+      "args": ["exec", "ai-mcp"]
     }
   }
 }
@@ -555,19 +556,20 @@ startup.
 ### Unix Repository Runtime
 
 For a Unix or other non-Node repository, do not create `package.json` solely to
-host SMAI. Configure MCP to launch an exact package version through Yarn:
+host the AI tooling. Configure MCP to launch an exact package version through
+Yarn:
 
 ```json
 {
   "mcpServers": {
-    "smai": {
+    "ai": {
       "type": "stdio",
       "command": "yarn",
       "args": [
         "dlx",
         "--package",
         "@sabinmarcu/ai@<exact-version>",
-        "smai-mcp"
+        "ai-mcp"
       ]
     }
   }
@@ -579,7 +581,7 @@ floating tag. This mode may need network access when the package is not already
 cached. Status and upgrade workflows must report and update the configured
 version explicitly.
 
-Allow `smai init mcp --runtime local|dlx` as an advanced override, but default
+Allow `ai init mcp --runtime local|dlx` as an advanced override, but default
 from repository type: `local` for Node and `dlx` for Unix. Reject `local` when
 the project dependency is unavailable rather than generating a broken command.
 
@@ -607,8 +609,8 @@ reconciliation skill delivered in Phase 03. Phase 05 may extend that workflow
 with desired-state planning, project creation, and MCP transport, but must not
 introduce a second installed-AI index or a separate reconciliation algorithm.
 
-The documented first-bootstrap path is `yarn dlx --package @sabinmarcu/ai smai
-init --type <node|unix>`. Once initialization completes, the generic skill uses
+The documented first-bootstrap path is `yarn dlx @sabinmarcu/ai init --type
+<node|unix>`. Once initialization completes, the generic skill uses
 the configured MCP server. The package may expose an MCP prompt as a
 convenience, but that prompt must not become the only workflow definition.
 
@@ -890,7 +892,8 @@ Deliverables:
 Exit criteria:
 
 - A user can request the full example workflow conversationally.
-- Clean Node and Unix targets can initialize without preinstalled SMAI assets.
+- Clean Node and Unix targets can initialize without preinstalled package
+  assets.
 - The agent asks for unresolved architecture choices rather than guessing.
 - The user reviews one coherent plan before mutation.
 - The resulting repository passes declared validations without depending on
@@ -941,7 +944,7 @@ their normalized plans and results.
 4. Start both binary entrypoints from the installed artifact.
 5. Perform an MCP initialize/list-tools smoke test.
 6. Execute a non-mutating plan through both adapters.
-7. Bootstrap a clean Node fixture through `yarn dlx --package` and verify that
+7. Bootstrap a clean Node fixture through `yarn dlx @sabinmarcu/ai` and verify that
   the package is installed in `devDependencies` at the invoked version.
 8. Bootstrap a clean Unix fixture and verify that no `package.json` is created
   and the generated MCP command contains an exact package version.
@@ -978,7 +981,7 @@ package checks as their phases land.
 
 ## Open Decisions
 
-1. Whether the CLI also exposes `smai mcp` as an alias for `smai-mcp`.
+1. Whether the CLI also exposes `ai mcp` as an alias for `ai-mcp`.
 2. Exact root-to-project coverage representation in stack state.
 3. Whether plans must survive MCP server restarts in the first version.
 4. Where temporary recovery data lives and how long it is retained.
@@ -1001,8 +1004,8 @@ Given an empty target, a user requests:
 
 The system must:
 
-1. Bootstrap Git, Yarn, baseline AI assets, the local SMAI dependency, and MCP
-  through `yarn dlx --package @sabinmarcu/ai smai init --type node`.
+1. Bootstrap Git, Yarn, baseline AI assets, the local `@sabinmarcu/ai`
+  dependency, and MCP through `yarn dlx @sabinmarcu/ai init --type node`.
 2. Inspect the empty target without rejecting future modules on current-file
    applicability.
 3. Ask only for missing choices.
