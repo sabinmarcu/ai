@@ -1,10 +1,10 @@
 import { Command } from 'clipanion';
-import { loadCatalog } from '../lib/catalog.js';
 import {
   buildCompleteMaterializationPlan,
   inspectMaterialization,
 } from '../lib/materialize.js';
 import { resolveStack } from '../lib/resolve.js';
+import { loadStackCatalog } from '../lib/stack-catalog.js';
 import { readStack } from '../lib/stack.js';
 
 export class StatusCommand extends Command {
@@ -16,19 +16,20 @@ export class StatusCommand extends Command {
 
   async execute(): Promise<number> {
     const stack = await readStack(process.cwd());
-    const catalog = await loadCatalog();
-
-    this.context.stdout.write(`Catalog modules: ${catalog.modules.size}\n`);
-    this.context.stdout.write(`Catalog mixins: ${catalog.mixins.size}\n`);
-    this.context.stdout.write(`Catalog presets: ${catalog.presets.size}\n`);
 
     if (!stack) {
       this.context.stdout.write('No .ai/stack.yml present in current repository.\n');
       return 0;
     }
 
+    const catalog = await loadStackCatalog(process.cwd(), stack);
+    this.context.stdout.write(`Catalog modules: ${catalog.modules.size}\n`);
+    this.context.stdout.write(`Catalog mixins: ${catalog.mixins.size}\n`);
+    this.context.stdout.write(`Catalog presets: ${catalog.presets.size}\n`);
+
     this.context.stdout.write(`Stack modules: ${stack.modules.length}\n`);
     this.context.stdout.write(`Stack presets: ${stack.presets.length}\n`);
+    this.context.stdout.write(`Asset mode: ${stack.assetMode}\n`);
 
     const unknownModules = stack.modules.filter((moduleId) => !catalog.modules.has(moduleId));
     if (unknownModules.length > 0) {
@@ -57,7 +58,10 @@ export class StatusCommand extends Command {
       this.context.stdout.write(`- ${mixin.id}: ${mixin.reason}\n`);
     }
 
-    const plan = await buildCompleteMaterializationPlan(catalog, resolution);
+    const plan = await buildCompleteMaterializationPlan(catalog, resolution, {
+      assetMode: stack.assetMode,
+      targetRoot: process.cwd(),
+    });
     const issues = await inspectMaterialization(process.cwd(), plan);
     this.context.stdout.write(`Managed files: ${plan.length}\n`);
     if (issues.length === 0) {

@@ -1,5 +1,5 @@
 import { Command } from 'clipanion';
-import { loadCatalog } from '../lib/catalog.js';
+import { loadStackCatalog } from '../lib/stack-catalog.js';
 import { readStack } from '../lib/stack.js';
 
 export class VerifyCommand extends Command {
@@ -15,7 +15,7 @@ export class VerifyCommand extends Command {
       throw new Error('No .ai/stack.yml found. Run `ai-lib init` first.');
     }
 
-    const catalog = await loadCatalog();
+    const catalog = await loadStackCatalog(process.cwd(), stack);
     const invalid = stack.modules.filter((moduleId) => !catalog.modules.has(moduleId));
 
     if (invalid.length > 0) {

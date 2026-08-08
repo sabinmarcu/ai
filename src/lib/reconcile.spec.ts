@@ -66,8 +66,9 @@ test('reconciles detector-backed selections while preserving presets and manual 
     }]]),
   };
   const stack: StackConfig = {
-    version: 1,
+    version: 2,
     createdAt: '2026-08-08T00:00:00.000Z',
+    assetMode: 'materialized',
     presets: ['base'],
     modules: ['detected/stale', 'manual/only', 'preset/module'],
   };
@@ -103,8 +104,9 @@ test('previews without mutation and applies the proposed stack and managed asset
   }), 'utf8');
   await writeFile(path.join(root, 'AGENTS.md'), '# Existing\n\nKeep this.\n', 'utf8');
   const stack: StackConfig = {
-    version: 1,
+    version: 2,
     createdAt: '2026-08-08T00:00:00.000Z',
+    assetMode: 'materialized',
     presets: [],
     modules: [],
   };

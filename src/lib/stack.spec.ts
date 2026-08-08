@@ -37,6 +37,7 @@ function createStack(): StackConfig {
   return {
     version: STACK_VERSION,
     createdAt: '2026-08-08T00:00:00.000Z',
+    assetMode: 'materialized',
     presets: ['universal'],
     modules: ['global/core'],
   };
@@ -69,8 +70,9 @@ test('rejects unsupported stack versions when reading and writing', async () => 
   const root = await createTemporaryRoot();
   await mkdir(path.join(root, '.ai'));
   await writeFile(path.join(root, '.ai', 'stack.yml'), [
-    'version: 2',
+    'version: 3',
     'createdAt: 2026-08-08T00:00:00.000Z',
+    'assetMode: materialized',
     'presets: []',
     'modules: []',
   ].join('\n'), 'utf8');
@@ -78,6 +80,19 @@ test('rejects unsupported stack versions when reading and writing', async () => 
   await expect(readStack(root)).rejects.toThrow();
   await expect(writeStack(root, {
     ...createStack(),
-    version: 2,
-  })).rejects.toThrow();
+    version: 3,
+  } as unknown as StackConfig)).rejects.toThrow();
+});
+
+test('round-trips source mode with a repository-relative catalog', async () => {
+  const root = await createTemporaryRoot();
+  const stack: StackConfig = {
+    ...createStack(),
+    assetMode: 'source',
+    catalogRoot: 'catalog',
+  };
+
+  await writeStack(root, stack);
+
+  await expect(readStack(root)).resolves.toEqual(stack);
 });

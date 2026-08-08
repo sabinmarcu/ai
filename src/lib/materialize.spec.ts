@@ -334,3 +334,125 @@ test('adds the root entrypoint reference once without replacing existing instruc
   await expect(ensureRootEntrypointReference(targetRoot)).resolves.toBe(false);
   await expect(readFile(agentsPath, 'utf8')).resolves.toBe(firstContent);
 });
+
+test('source mode writes only the entrypoint with repository-relative source links', async () => {
+  const module = await createModule();
+  const targetRoot = await mkdtemp(path.join(os.tmpdir(), 'ai-lib-source-repo-'));
+  temporaryRoots.push(targetRoot);
+  const moduleSourceRoot = path.join(targetRoot, 'catalog', 'modules', 'test-base');
+  await mkdir(path.join(moduleSourceRoot, 'files', 'instructions'), { recursive: true });
+  await mkdir(path.join(moduleSourceRoot, 'files', 'skills', 'release', 'assets'), { recursive: true });
+  await writeFile(
+    path.join(moduleSourceRoot, 'files', 'instructions', 'base.instructions.md'),
+    '# Base\n',
+    'utf8',
+  );
+  await writeFile(path.join(moduleSourceRoot, 'files', 'skills', 'release', 'SKILL.md'), '# Release\n', 'utf8');
+  await writeFile(
+    path.join(moduleSourceRoot, 'files', 'skills', 'release', 'assets', 'template.md'),
+    'template\n',
+    'utf8',
+  );
+  module.sourceRoot = moduleSourceRoot;
+  const catalog: Catalog = {
+    modules: new Map([[module.id, module]]),
+    mixins: new Map(),
+    presets: new Map(),
+  };
+  const bootstrapPath = path.join(targetRoot, 'catalog', 'bootstrap', 'skills', 'stack-reconciliation');
+  await mkdir(bootstrapPath, { recursive: true });
+  await writeFile(path.join(bootstrapPath, 'SKILL.md'), '# Reconcile\n', 'utf8');
+
+  const plan = await buildCompleteMaterializationPlan(catalog, {
+    effectiveModules: [module.id],
+    activeMixins: [],
+  }, {
+    assetMode: 'source',
+    targetRoot,
+  });
+
+  expect(plan).toHaveLength(1);
+  expect(plan[0]?.targetPath).toBe('.ai/AGENTS.md');
+  expect(plan[0]?.content).toContain('## Catalog Source Assets');
+  expect(plan[0]?.content).toContain('../catalog/bootstrap/skills/stack-reconciliation/SKILL.md');
+  expect(plan[0]?.content).toContain(
+    '../catalog/modules/test-base/files/instructions/base.instructions.md',
+  );
+  expect(plan[0]?.content).not.toContain('.github/skills/stack-reconciliation/SKILL.md');
+});
+
+test('switching to source mode removes unchanged materialized copies', async () => {
+  const targetRoot = await mkdtemp(path.join(os.tmpdir(), 'ai-lib-source-switch-'));
+  temporaryRoots.push(targetRoot);
+  const moduleSourceRoot = path.join(targetRoot, 'catalog', 'modules', 'test-base');
+  const bootstrapPath = path.join(targetRoot, 'catalog', 'bootstrap', 'skills', 'stack-reconciliation');
+  await mkdir(path.join(moduleSourceRoot, 'files', 'instructions'), { recursive: true });
+  await mkdir(bootstrapPath, { recursive: true });
+  await writeFile(
+    path.join(moduleSourceRoot, 'files', 'instructions', 'base.instructions.md'),
+    '# Base\n',
+    'utf8',
+  );
+  await writeFile(path.join(bootstrapPath, 'SKILL.md'), '# Reconcile\n', 'utf8');
+  const module: ModuleManifest = {
+    id: 'test/base',
+    name: 'Base',
+    description: 'Base',
+    version: '1.0.0',
+    sourceRoot: moduleSourceRoot,
+    category: 'test',
+    managedPaths: ['.github/instructions/shared/base/'],
+    sourceAssets: ['files/instructions/base.instructions.md'],
+    overridePaths: [],
+  };
+  const catalog: Catalog = {
+    modules: new Map([[module.id, module]]),
+    mixins: new Map(),
+    presets: new Map(),
+  };
+  const resolution = {
+    effectiveModules: [module.id],
+    activeMixins: [],
+  };
+  const materializedPlan = await buildCompleteMaterializationPlan(catalog, resolution, {
+    packageRoot: targetRoot,
+  });
+  await applyMaterialization(targetRoot, materializedPlan);
+
+  const sourcePlan = await buildCompleteMaterializationPlan(catalog, resolution, {
+    assetMode: 'source',
+    targetRoot,
+  });
+
+  await expect(applyMaterialization(targetRoot, sourcePlan)).resolves.toEqual({
+    files: 1,
+    removed: 2,
+  });
+  await expect(readFile(
+    path.join(targetRoot, '.github', 'instructions', 'shared', 'base', 'base.instructions.md'),
+    'utf8',
+  )).rejects.toThrow();
+  await expect(readFile(
+    path.join(targetRoot, '.github', 'skills', 'stack-reconciliation', 'SKILL.md'),
+    'utf8',
+  )).rejects.toThrow();
+});
+
+test('source mode rejects assets outside the target repository', async () => {
+  const module = await createModule();
+  const catalog: Catalog = {
+    modules: new Map([[module.id, module]]),
+    mixins: new Map(),
+    presets: new Map(),
+  };
+  const targetRoot = await mkdtemp(path.join(os.tmpdir(), 'ai-lib-source-target-'));
+  temporaryRoots.push(targetRoot);
+
+  await expect(buildCompleteMaterializationPlan(catalog, {
+    effectiveModules: [module.id],
+    activeMixins: [],
+  }, {
+    assetMode: 'source',
+    targetRoot,
+  })).rejects.toThrow('Source asset must be contained in the target repository');
+});

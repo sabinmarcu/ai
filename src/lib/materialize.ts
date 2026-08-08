@@ -15,6 +15,7 @@ import type {
   Catalog,
   MixinManifest,
   ModuleManifest,
+  StackConfig,
 } from '../types.js';
 import { getPackageRoot } from './package-root.js';
 import type { StackResolution } from './resolve.js';
@@ -186,10 +187,24 @@ export async function buildMaterializationPlan(
   return plannedFiles;
 }
 
+function sourceAssetLink(targetRoot: string, sourcePath: string): string {
+  const absoluteTargetRoot = path.resolve(targetRoot);
+  const absoluteSourcePath = path.resolve(sourcePath);
+  if (!absoluteSourcePath.startsWith(`${absoluteTargetRoot}${path.sep}`)) {
+    throw new Error(`Source asset must be contained in the target repository: ${sourcePath}`);
+  }
+  return path.relative(path.join(absoluteTargetRoot, '.ai'), absoluteSourcePath)
+    .split(path.sep)
+    .join('/');
+}
+
 function renderEntrypoint(
   catalog: Catalog,
   resolution: Pick<StackResolution, 'activeMixins' | 'effectiveModules'>,
   catalogPlan: PlannedManagedFile[],
+  assetMode: StackConfig['assetMode'],
+  reconciliationSkillLink: string,
+  targetRoot?: string,
 ): string {
   const overridePaths = new Set<string>();
   for (const moduleId of resolution.effectiveModules) {
@@ -210,13 +225,18 @@ function renderEntrypoint(
     '',
     '## Reconciliation',
     '',
-    '- Use the [stack reconciliation skill](../.github/skills/stack-reconciliation/SKILL.md) after repository changes may alter module applicability.',
+    `- Use the [stack reconciliation skill](${reconciliationSkillLink}) after repository changes may alter module applicability.`,
     '- Use the CLI workflow from that skill; do not edit managed files or stack state directly.',
     '',
-    '## Managed Shared Assets',
+    assetMode === 'source' ? '## Catalog Source Assets' : '## Managed Shared Assets',
     '',
-    '- [baseline/stack-reconciliation](../.github/skills/stack-reconciliation/SKILL.md)',
-    ...catalogPlan.map((file) => `- [${file.ownerId}](../${file.targetPath})`),
+    `- [baseline/stack-reconciliation](${reconciliationSkillLink})`,
+    ...catalogPlan.map((file) => {
+      const link = assetMode === 'source'
+        ? sourceAssetLink(targetRoot as string, file.sourcePath as string)
+        : `../${file.targetPath}`;
+      return `- [${file.ownerId}](${link})`;
+    }),
     '',
     '## Repository-Local Override Locations',
     '',
@@ -224,20 +244,39 @@ function renderEntrypoint(
       ? [...overridePaths].map((overridePath) => `- \`${overridePath}\``)
       : ['- No module-specific override locations are active.']),
     '',
-    'Managed shared assets are replaced during reconciliation. Keep repository-specific tuning in the override locations above.',
+    assetMode === 'source'
+      ? 'Catalog source assets are linked in place and are not managed copies. Keep repository-specific tuning in the override locations above.'
+      : 'Managed shared assets are replaced during reconciliation. Keep repository-specific tuning in the override locations above.',
     '',
   ];
   return lines.join('\n');
 }
 
+export interface CompleteMaterializationOptions {
+  assetMode?: StackConfig['assetMode'];
+  packageRoot?: string;
+  targetRoot?: string;
+}
+
 export async function buildCompleteMaterializationPlan(
   catalog: Catalog,
   resolution: Pick<StackResolution, 'activeMixins' | 'effectiveModules'>,
-  packageRoot = getPackageRoot(),
+  options: CompleteMaterializationOptions = {},
 ): Promise<PlannedManagedFile[]> {
+  const assetMode = options.assetMode ?? 'materialized';
+  const packageRoot = options.packageRoot ?? getPackageRoot();
+  const { targetRoot } = options;
+  if (assetMode === 'source' && !targetRoot) {
+    throw new Error('Source asset mode requires a target repository root.');
+  }
   const catalogPlan = await buildMaterializationPlan(catalog, resolution);
+  if (assetMode === 'source') {
+    for (const plannedFile of catalogPlan) {
+      sourceAssetLink(targetRoot as string, plannedFile.sourcePath as string);
+    }
+  }
   const skillSourcePath = path.join(
-    packageRoot,
+    assetMode === 'source' ? targetRoot as string : packageRoot,
     'catalog',
     'bootstrap',
     'skills',
@@ -248,7 +287,17 @@ export async function buildCompleteMaterializationPlan(
     id: 'baseline/stack-reconciliation',
     version: '1',
   });
-  const entrypointContent = renderEntrypoint(catalog, resolution, catalogPlan);
+  const reconciliationSkillLink = assetMode === 'source'
+    ? sourceAssetLink(targetRoot as string, skillSourcePath)
+    : '../.github/skills/stack-reconciliation/SKILL.md';
+  const entrypointContent = renderEntrypoint(
+    catalog,
+    resolution,
+    catalogPlan,
+    assetMode,
+    reconciliationSkillLink,
+    targetRoot,
+  );
   const baselinePlan: PlannedManagedFile[] = [
     {
       content: skillContent,
@@ -269,7 +318,9 @@ export async function buildCompleteMaterializationPlan(
     },
   ];
 
-  return [...baselinePlan, ...catalogPlan];
+  return assetMode === 'source'
+    ? [baselinePlan[1] as PlannedManagedFile]
+    : [...baselinePlan, ...catalogPlan];
 }
 
 export async function ensureRootEntrypointReference(cwd: string): Promise<boolean> {

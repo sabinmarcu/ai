@@ -2,12 +2,12 @@ import {
   Command,
   Option,
 } from 'clipanion';
-import { loadCatalog } from '../lib/catalog.js';
 import {
   applyReconciliation,
   planReconciliation,
 } from '../lib/reconcile.js';
 import type { ReconciliationPlan } from '../lib/reconcile.js';
+import { loadStackCatalog } from '../lib/stack-catalog.js';
 import { readStack } from '../lib/stack.js';
 
 function writeList(
@@ -64,7 +64,7 @@ export class ReconcileCommand extends Command {
     if (!stack) {
       throw new Error('No .ai/stack.yml found. Run `ai-lib init` first.');
     }
-    const catalog = await loadCatalog();
+    const catalog = await loadStackCatalog(process.cwd(), stack);
     const plan = await planReconciliation(process.cwd(), catalog, stack);
     writePlan(this.context.stdout, plan);
 

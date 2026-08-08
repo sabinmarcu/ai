@@ -96,12 +96,23 @@ export interface MixinManifest {
   requiresAll: ModuleId[];
 }
 
-export interface StackConfig {
-  version: number;
+interface StackConfigBase {
+  version: 2;
   createdAt: string;
   presets: string[];
   modules: ModuleId[];
 }
+
+export interface MaterializedStackConfig extends StackConfigBase {
+  assetMode: 'materialized';
+}
+
+export interface SourceStackConfig extends StackConfigBase {
+  assetMode: 'source';
+  catalogRoot: string;
+}
+
+export type StackConfig = MaterializedStackConfig | SourceStackConfig;
 
 export interface Catalog {
   modules: Map<ModuleId, ModuleManifest>;

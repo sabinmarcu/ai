@@ -1,11 +1,11 @@
 import { Command } from 'clipanion';
-import { loadCatalog } from '../lib/catalog.js';
 import {
   applyMaterialization,
   buildCompleteMaterializationPlan,
   ensureRootEntrypointReference,
 } from '../lib/materialize.js';
 import { resolveStack } from '../lib/resolve.js';
+import { loadStackCatalog } from '../lib/stack-catalog.js';
 import { readStack } from '../lib/stack.js';
 
 export class ApplyCommand extends Command {
@@ -22,9 +22,12 @@ export class ApplyCommand extends Command {
       throw new Error('No .ai/stack.yml found. Run `ai-lib init` first.');
     }
 
-    const catalog = await loadCatalog();
+    const catalog = await loadStackCatalog(process.cwd(), stack);
     const resolution = resolveStack(catalog, stack);
-    const plan = await buildCompleteMaterializationPlan(catalog, resolution);
+    const plan = await buildCompleteMaterializationPlan(catalog, resolution, {
+      assetMode: stack.assetMode,
+      targetRoot: process.cwd(),
+    });
     const result = await applyMaterialization(process.cwd(), plan);
     const addedRootReference = await ensureRootEntrypointReference(process.cwd());
 

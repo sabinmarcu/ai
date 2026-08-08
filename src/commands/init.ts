@@ -37,7 +37,9 @@ export class InitCommand extends Command {
   args = Option.Proxy();
 
   async execute(): Promise<number> {
-    const catalog = await loadCatalog();
+    const cwd = process.cwd();
+    const local = this.args.includes('--local');
+    const catalog = await loadCatalog(local ? cwd : undefined);
 
     const presetIds = collectArgumentValues(this.args, ['--preset', '-p']);
     const explicitModules = collectArgumentValues(this.args, ['--module', '-m']);
@@ -52,13 +54,20 @@ export class InitCommand extends Command {
     };
     const resolution = resolveStack(catalog, selectedStack);
 
-    await writeStack(process.cwd(), {
+    await writeStack(cwd, {
       version: STACK_VERSION,
       createdAt: new Date().toISOString(),
+      ...(local
+        ? {
+          assetMode: 'source',
+          catalogRoot: 'catalog',
+        } as const
+        : { assetMode: 'materialized' } as const),
       ...selectedStack,
     });
 
     this.context.stdout.write(`Wrote .ai/stack.yml with ${resolution.effectiveModules.length} effective modules.\n`);
+    this.context.stdout.write(`Asset mode: ${local ? 'source' : 'materialized'}\n`);
     return 0;
   }
 }

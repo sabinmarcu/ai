@@ -11,14 +11,24 @@ import {
 } from 'yaml';
 import type { StackConfig } from '../types.js';
 
-export const STACK_VERSION = 1;
+export const STACK_VERSION = 2;
 
-const stackConfigSchema = z.object({
+const stackConfigBaseSchema = z.object({
   version: z.literal(STACK_VERSION),
   createdAt: z.string().datetime(),
   presets: z.array(z.string()),
   modules: z.array(z.string()),
-}).strict();
+});
+
+const stackConfigSchema = z.discriminatedUnion('assetMode', [
+  stackConfigBaseSchema.extend({
+    assetMode: z.literal('materialized'),
+  }).strict(),
+  stackConfigBaseSchema.extend({
+    assetMode: z.literal('source'),
+    catalogRoot: z.string().min(1),
+  }).strict(),
+]);
 
 export const STACK_PATH = path.join('.ai', 'stack.yml');
 

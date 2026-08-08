@@ -1,0 +1,17 @@
+version: 2
+createdAt: 2026-08-08T14:58:15.204Z
+presets: []
+modules:
+  - arch/node-library
+  - arch/node-package
+  - arch/node-root-package
+  - arch/node-tool
+  - global/core
+  - lang/typescript
+  - tooling/commitlint
+  - tooling/eslint
+  - tooling/husky
+  - tooling/lint-staged
+  - tooling/yarn
+assetMode: source
+catalogRoot: catalog

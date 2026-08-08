@@ -121,7 +121,10 @@ export async function planReconciliation(
   const currentResolution = resolveStack(catalog, stack);
   const proposedStack = proposeStackSelection(catalog, stack, target);
   const proposedResolution = resolveStack(catalog, proposedStack);
-  const materializationPlan = await buildCompleteMaterializationPlan(catalog, proposedResolution);
+  const materializationPlan = await buildCompleteMaterializationPlan(catalog, proposedResolution, {
+    assetMode: stack.assetMode,
+    targetRoot: cwd,
+  });
   const currentOverrides = activeOverridePaths(catalog, currentResolution);
   const proposedOverrides = activeOverridePaths(catalog, proposedResolution);
 

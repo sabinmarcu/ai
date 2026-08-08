@@ -1,6 +1,6 @@
 ---
 name: reflection
-description: "Reflect on catalog module changes in this repository. Use after adding, editing, renaming, or removing catalog modules to redetect applicable modules and mixins, refresh repository-local AI links when needed, consume newly applicable guidance, and validate the result."
+description: "Reflect on catalog module changes in this repository. Use after adding, editing, renaming, or removing catalog modules to reconcile the generated AI surface through the CLI, consume newly applicable guidance, and validate the result."
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -15,17 +15,16 @@ Use this skill after changing files under `catalog/modules/`.
    concrete configuration or guardrail applies only when multiple ordinary
    modules coexist. Follow the mixin evaluation rules in `AGENTS.md`; do not
    create a mixin without user approval.
-2. Run `yarn cli detect` from the repository root. Treat its repository and
+2. Run `yarn cli reconcile` from the repository root. Treat its repository and
    project target results as authoritative; do not infer applicability from
    memory or flatten unrelated target scopes.
-3. Compare the detector-confirmed effective modules and active mixins with the
-   `Active Repository AI Links` section in `AGENTS.md`.
-4. If the section is stale, update only that section so it lists the current
-   effective modules, active mixins, and every source AI asset declared by
-   their manifests. Use repository-relative paths and deterministic resolution
-   order. Remove links for modules or mixins that no longer apply.
-5. Read and apply every newly linked AI asset for the remainder of the task.
-   Do not edit shared catalog assets merely to reconcile the local links.
+3. Present all proposed selection, dependency, mixin, managed-file, drift, and
+   local-override changes. Obtain user approval before applying them.
+4. After approval, run `yarn cli reconcile --apply`. Do not edit
+   `.ai/stack.yml`, `.ai/materialized.yml`, or `.ai/AGENTS.md` directly.
+5. Run `yarn cli status`, then read and apply every newly linked AI asset in
+   `.ai/AGENTS.md` for the remainder of the task. Do not edit shared catalog
+   assets merely to reconcile the generated surface.
 6. Run `yarn check`. If validation fails, report the failure and leave
    unrelated files unchanged.
 7. Summarize detected additions and removals, mixin activation reasons, local
@@ -35,9 +34,11 @@ Use this skill after changing files under `catalog/modules/`.
 ## Boundaries
 
 - This skill is repository-local workflow guidance. Do not copy it into a
-  catalog module or modify CLI source code to support it.
+   catalog module.
 - Do not edit `AGENTS.local.md`.
+- Let the CLI own stack selection and generated AI-surface updates. Do not add
+   computed module, mixin, or source-asset lists to root `AGENTS.md`.
 - Do not change explicit module selections or repair unrelated drift without
-  user approval.
+   user approval.
 - Always use `yarn lint:fix`, either directly or through `yarn check`; never run
   the non-fixing lint command.
