@@ -1,0 +1,18 @@
+{
+    "id": "guidance/commits",
+    "name": "Commit Guidance",
+    "description": "Universal guidance for clear commit titles and descriptions.",
+    "version": "0.1.0",
+    "category": "guidance",
+    "managedPaths": [
+        ".github/instructions/shared/commits/"
+    ],
+    "sourceAssets": [
+        "files/instructions/commits.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/commits/"
+    ],
+    "dependsOn": [],
+    "conflictsWith": []
+}

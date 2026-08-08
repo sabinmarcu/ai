@@ -10,7 +10,8 @@ applyTo: "**/*"
 - Use Conventional Commits for every commit.
 - Format the first line as `<type>(<optional-scope>): <description>`.
 - Use common types such as `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, and `build`.
-- Keep the description concise, imperative, and focused on one coherent change.
+- Treat the text after the type and optional scope as the commit title; follow the title guidance from `guidance/commits`.
+- Keep that text concise and imperative.
 - Use `!` or a `BREAKING CHANGE:` footer when the commit introduces a breaking change.
 
 ## Scope
@@ -21,7 +22,8 @@ applyTo: "**/*"
 
 ## Body and Footers
 
-- Add a body when motivation, tradeoffs, or non-obvious context will help future readers.
+- Follow the bullet-list commit description guidance from `guidance/commits`.
+- Add motivation, tradeoffs, or non-obvious context to the relevant bullets when it will help future readers.
 - Use footers for breaking changes, issue references, and other structured metadata.
 - Keep unrelated changes in separate commits.
 

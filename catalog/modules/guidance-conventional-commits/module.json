@@ -13,6 +13,8 @@
   "overridePaths": [
     ".github/instructions/local/conventional-commits/"
   ],
-  "dependsOn": [],
+  "dependsOn": [
+    "guidance/commits"
+  ],
   "conflictsWith": []
 }

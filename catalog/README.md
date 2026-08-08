@@ -4,7 +4,8 @@ The catalog contains composable module and preset manifests.
 
 Universal guidance is independent of runtime and enforcement tooling:
 
-- `guidance/conventional-commits`: commit-authoring policy loaded through `global/core` for every repository.
+- `guidance/commits`: generic policy for impact-focused titles and bullet-list descriptions.
+- `guidance/conventional-commits`: Conventional Commits formatting layered on `guidance/commits` and loaded through `global/core` for every repository.
 
 ## Modules
 

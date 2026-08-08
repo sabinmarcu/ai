@@ -8,6 +8,7 @@ Universal commit-authoring guidance based on Conventional Commits.
 
 ## Intent
 
+- Extend `guidance/commits` with Conventional Commits formatting.
 - Require Conventional Commits in every repository through `global/core`.
 - Provide general type, scope, subject, body, and breaking-change guidance.
 - Leave repository-specific scope vocabularies to specialized guidance mixins.
