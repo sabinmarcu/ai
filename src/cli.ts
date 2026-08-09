@@ -8,9 +8,11 @@ import {
 import { ApplyCommand } from './commands/apply.js';
 import { DetectCommand } from './commands/detect.js';
 import { InitCommand } from './commands/init.js';
+import { InteractiveCommand } from './commands/interactive.js';
 import { ReconcileCommand } from './commands/reconcile.js';
 import { StatusCommand } from './commands/status.js';
 import { VerifyCommand } from './commands/verify.js';
+import { AiCli } from './lib/cli-errors.js';
 import { withRepoUtilityCacheScope } from './lib/repo-utility-cache.js';
 
 const targetRoot = process.env.AI_TARGET_ROOT;
@@ -21,7 +23,7 @@ if (targetRoot) {
 
 const packageManifest = createRequire(import.meta.url)('../package.json') as { version: string };
 
-const cli = new Cli({
+const cli = new AiCli({
   binaryLabel: 'AI Library CLI',
   binaryName: 'ai',
   binaryVersion: packageManifest.version,
@@ -30,6 +32,7 @@ const cli = new Cli({
 cli.register(ApplyCommand);
 cli.register(DetectCommand);
 cli.register(InitCommand);
+cli.register(InteractiveCommand);
 cli.register(ReconcileCommand);
 cli.register(StatusCommand);
 cli.register(VerifyCommand);

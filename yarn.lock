@@ -771,7 +771,9 @@ __metadata:
     globals: "npm:^16.3.0"
     husky: "npm:^9.1.7"
     ink: "npm:^7.1.1"
+    ink-testing-library: "npm:^4.0.0"
     lint-staged: "npm:^15.5.2"
+    picocolors: "npm:^1.1.1"
     react: "npm:^19.2.8"
     tsx: "npm:^4.20.3"
     typescript: "npm:^5.8.3"
@@ -3421,6 +3423,18 @@ __metadata:
   version: 4.1.1
   resolution: "ini@npm:4.1.1"
   checksum: 10c0/7fddc8dfd3e63567d4fdd5d999d1bf8a8487f1479d0b34a1d01f28d391a9228d261e19abc38e1a6a1ceb3400c727204fce05725d5eb598dfcf2077a1e3afe211
+  languageName: node
+  linkType: hard
+
+"ink-testing-library@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "ink-testing-library@npm:4.0.0"
+  peerDependencies:
+    "@types/react": ">=18.0.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/88d9b70c1e3881cf2d32d678a27e689bfc03c02553d8c06bc4db97ac06d812be9b74f29009a66673f2cc036e01545894bf412dce50ed7ac668f3c68e8c046efd
   languageName: node
   linkType: hard
 
