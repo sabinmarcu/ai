@@ -12,7 +12,7 @@ Status: Complete (2026-08-08)
 - Both modes use the same detection, resolution, reconciliation, drift, and
 	root-entrypoint workflows.
 - Unsupported stack versions fail strict validation. Cross-release migration
-	and compatibility policy remain Phase 4 responsibilities.
+	and compatibility policy remain Phase 5 responsibilities.
 
 ## Objective
 

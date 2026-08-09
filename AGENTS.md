@@ -39,12 +39,12 @@ This repository builds and ships a composable AI bootstrap CLI and module catalo
 ## Mixin Evaluation
 
 - For every module addition, edit, review, or analysis, check whether any concrete configuration or guardrail is valid only when multiple ordinary modules are present.
-- Inspect the affected module's dependency closure before deciding ownership. Consult the mixin decisions and upstream risks in `plan/phase-05-cli-mcp-bootstrap.md`.
+- Inspect the affected module's dependency closure before deciding ownership. Consult the mixin decisions and upstream risks in `plan/phase-06-cli-mcp-bootstrap.md`.
 - Recommendations and baseline prohibitions may remain in an architecture module; they do not create mixins by themselves.
 - Keep concrete tool implementation in the selected tooling module unless another module changes that implementation.
 - Use an ordinary dependency when one module always specializes another; do not model that relationship as a mixin.
 - When a mixin is plausible, prompt the user before implementing it and include the required modules, the intersection-specific rule, why no ordinary module owns it alone, migration or duplication risk, and a recommendation.
-- Record accepted, deferred, and rejected mixin candidates in `plan/phase-05-cli-mcp-bootstrap.md` with reasoning.
+- Record accepted, deferred, and rejected mixin candidates in `plan/phase-06-cli-mcp-bootstrap.md` with reasoning.
 - Never add mixins to presets or selected stack state.
 
 ## AI Asset Usage Note

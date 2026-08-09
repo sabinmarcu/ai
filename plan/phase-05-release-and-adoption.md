@@ -1,4 +1,4 @@
-# Phase 04 - Release, Documentation, and Adoption
+# Phase 05 - Release, Documentation, and Adoption
 
 Status: Planned
 
@@ -14,8 +14,11 @@ Build a searchable Docusaurus documentation site from repository-owned source
 content, keep stable documentation aligned with stable releases, and preserve
 the documentation needed to use supported compatibility lines.
 
-Phase 4 establishes the package, release, compatibility, and documentation
-baseline that Phase 5 extends with the `ai` and `ai-mcp` entrypoints and
+Publish and document the interactive stack manager delivered in Phase 4,
+including its React and Ink runtime dependencies and `ai manage` command.
+
+Phase 5 establishes the package, release, compatibility, and documentation
+baseline that Phase 6 extends with the `ai` and `ai-mcp` entrypoints and
 exact-version bootstrap behavior.
 
 ## Decisions
@@ -262,7 +265,7 @@ The `next` channel is for early adoption and integration testing:
 - no migration promise exists between arbitrary rolling builds beyond the
 	compatibility guarantees already documented for the upcoming stable line
 
-Phase 5's persistent MCP installation must pin an exact resolved package
+Phase 6's persistent MCP installation must pin an exact resolved package
 version even when initialization was invoked through `@next`. It must never
 persist a floating dist-tag as the runtime dependency.
 

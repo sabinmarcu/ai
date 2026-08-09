@@ -1,4 +1,4 @@
-# Phase 06 - Subtree Sync and Backport Workflow
+# Phase 07 - Subtree Sync and Backport Workflow
 
 ## Objective
 

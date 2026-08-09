@@ -1,4 +1,4 @@
-# Phase 05 - CLI and MCP Bootstrap
+# Phase 06 - CLI and MCP Bootstrap
 
 Date: 2026-08-08
 Status: Planned
@@ -605,7 +605,7 @@ memory. It should prefer MCP and fall back to equivalent CLI commands only when
 the MCP server is unavailable.
 
 Build this broader bootstrap workflow on the baseline AI entrypoint and stack
-reconciliation skill delivered in Phase 03. Phase 05 may extend that workflow
+reconciliation skill delivered in Phase 03. Phase 06 may extend that workflow
 with desired-state planning, project creation, and MCP transport, but must not
 introduce a second installed-AI index or a separate reconciliation algorithm.
 
@@ -974,9 +974,12 @@ package checks as their phases land.
 - Phase 02 catalog work gains optional capability metadata and scope semantics.
 - Phase 03 materialization becomes one stage of the larger plan/apply engine and
   adopts scoped stack state.
-- Phase 04 release work establishes the package and adoption baseline that this
+- Phase 04 interactive management remains an adapter over shared services and
+  gains repository and project scope navigation without duplicating bootstrap
+  planning behavior.
+- Phase 05 release work establishes the package and adoption baseline that this
   phase extends with a second entrypoint, MCP smoke tests, and bootstrap flows.
-- Phase 06 provenance and backport work must distinguish generated code,
+- Phase 07 provenance and backport work must distinguish generated code,
   managed AI assets, and local overrides introduced here.
 
 ## Open Decisions
