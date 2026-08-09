@@ -8,7 +8,7 @@
     "lang/typescript",
     "guardrails/web-platform",
     "guardrails/web-style",
-    "arch/web-react",
+    "arch/react",
     "arch/web-application"
   ]
 }

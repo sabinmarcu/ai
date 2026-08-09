@@ -1,4 +1,4 @@
-const webDependencies = ['react', 'next', 'vite', '@angular/core', 'svelte'];
+const webDependencies = ['react-dom', 'next', 'vite', '@angular/core', 'svelte'];
 
 export default function detect({ dependency }) {
   const evidence = webDependencies.flatMap((name) => dependency(name));

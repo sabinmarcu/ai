@@ -1,6 +1,7 @@
-# arch/web-react
+# arch/react
 
-Architecture guardrails for React applications and libraries.
+Renderer-neutral architecture guardrails for React applications, libraries,
+and terminal interfaces.
 
 ## Included AI Files
 

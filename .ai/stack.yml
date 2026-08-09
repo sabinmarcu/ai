@@ -6,6 +6,7 @@ modules:
   - arch/node-package
   - arch/node-root-package
   - arch/node-tool
+  - arch/react
   - global/core
   - lang/typescript
   - tooling/commitlint

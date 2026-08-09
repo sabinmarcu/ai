@@ -11,11 +11,11 @@ Universal guidance is independent of runtime and enforcement tooling:
 
 Each module lives under `catalog/modules/<module-folder>/module.json`.
 
-Web guidance is split by concern:
+React and web guidance are split by concern:
 
 - `guardrails/web-platform`: supported browsers, native APIs, and no-polyfill policy.
 - `guardrails/web-style`: Vanilla Extract, `@sabinmarcu/theme`, responsive styling, and accessibility.
-- `arch/web-react`: Web React component ownership, state selection, models, data, and effects for applications and libraries.
+- `arch/react`: renderer-neutral React component ownership, state selection, models, data, and effects for web, native, and terminal renderers.
 - `lang/typescript`: shared TypeScript architecture, including function-owned type declaration merging.
 
 Node project architecture is split by concern and project classification:

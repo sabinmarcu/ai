@@ -106,7 +106,7 @@ src/
     registry.ts
     arch-monorepo/
     arch-node-package/
-    arch-web-react/
+    arch-react/
     tooling-eslint/
     mixins/
   adapters/
@@ -187,7 +187,7 @@ scopes:
     kind: project
     modules:
       - arch/web-application
-      - arch/web-react
+      - arch/react
   - path: packages/shared
     kind: project
     modules:
@@ -222,7 +222,7 @@ scopes:
     presets: []
     modules:
       - arch/web-application
-      - arch/web-react
+      - arch/react
 ```
 
 Rules:
@@ -476,7 +476,7 @@ ai init tool
 ai init mcp
 ai inspect
 ai bootstrap arch/monorepo --plan
-ai project add apps/web --arch arch/web-application --module arch/web-react --plan
+ai project add apps/web --arch arch/web-application --module arch/react --plan
 ai configure tooling/eslint --scope . --coverage descendants --plan
 ai apply <plan>
 ai status
@@ -647,10 +647,11 @@ baseline.
 
 Owns deployable Node server and service behavior beyond the common Node project shape.
 
-### `arch/web-react`
+### `arch/react`
 
-Owns React component and state architecture for both applications and libraries.
-Concrete web application or library classification is selected independently.
+Owns renderer-neutral React component and state architecture for applications,
+libraries, and terminal interfaces. Concrete web application, web library, or
+Node tool classification is selected independently.
 
 ### `lang/typescript`
 
@@ -686,6 +687,8 @@ mappings remain mixin-owned.
 
 - `mixin/typescript-eslint` augments ESLint plans when TypeScript is effective.
 - `mixin/react-eslint` augments ESLint plans when React is effective.
+- `mixin/web-react-eslint` augments React ESLint plans with browser
+  accessibility linting when web-platform guidance is effective.
 - `mixin/eslint-lint-staged` maps staged source files to fixing ESLint.
 - `mixin/husky-lint-staged` composes lint-staged into pre-commit.
 - `mixin/husky-typescript` composes type checking into pre-commit.
@@ -716,6 +719,14 @@ mappings remain mixin-owned.
 
 ### Deferred and Rejected Mixin Decisions
 
+- Accept `mixin/web-react-eslint` for `arch/react`,
+  `guardrails/web-platform`, and `tooling/eslint`. JSX accessibility peers,
+  TSX coverage, and validation are valid only for the web React and ESLint
+  intersection; React architecture must remain renderer-neutral, web-platform
+  guidance does not own ESLint configuration, and ESLint alone cannot infer a
+  renderer. Splitting this behavior from `mixin/react-eslint` migrates web
+  accessibility guidance to a new managed path while preventing Ink and other
+  non-web renderers from receiving browser rules.
 - Defer `mixin/monorepo-typescript-eslint` until type-aware linting across
   project references requires behavior not owned by existing two-way mixins.
 - Defer `mixin/typescript-web-library` until browser compiler configuration or
@@ -728,8 +739,8 @@ mappings remain mixin-owned.
   `eslint-plugin-storybook` and `eslint-plugin-expect-type`.
 - Reject `mixin/node-package-eslint`: Node package architecture may recommend
   ESLint and prohibit Prettier, but concrete setup belongs to `tooling/eslint`.
-- Do not add web-platform or web-style ESLint mixins while the shared config
-  already owns browser/Node globals and logical-property linting.
+- Do not add generic two-way web-platform or web-style ESLint mixins while the
+  shared config already owns browser/Node globals and logical-property linting.
 - Do not add a two-way `mixin/husky-yarn` while constraints and version checks
   are monorepo-specific; keep that behavior in the three-way mixin.
 

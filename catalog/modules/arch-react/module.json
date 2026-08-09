@@ -1,0 +1,20 @@
+{
+    "id": "arch/react",
+    "name": "React Architecture",
+    "description": "Renderer-neutral React component ownership, state selection, models, data, and effect boundaries.",
+    "version": "0.1.0",
+    "category": "architecture",
+    "managedPaths": [
+        ".github/instructions/shared/react/"
+    ],
+    "sourceAssets": [
+        "files/instructions/react-architecture.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/react/"
+    ],
+    "dependsOn": [
+        "global/core"
+    ],
+    "conflictsWith": []
+}

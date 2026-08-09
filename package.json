@@ -19,9 +19,7 @@
     "node": ">=22.18.0"
   },
   "type": "module",
-  "bin": {
-    "ai": "./bin/ai"
-  },
+  "bin": "./bin/ai",
   "files": [
     "bin",
     "dist",
@@ -44,6 +42,8 @@
   "dependencies": {
     "@sabinmarcu/utils-repo": "2.0.6",
     "clipanion": "^4.0.0-rc.4",
+    "ink": "^7.1.1",
+    "react": "^19.2.8",
     "yaml": "^2.8.1",
     "zod": "^3.24.1"
   },
@@ -53,10 +53,13 @@
     "@eslint/js": "^9.34.0",
     "@sabinmarcu/eslint-config": "latest",
     "@types/node": "^24.0.0",
+    "@types/react": "^19.2.18",
     "@typescript-eslint/types": "^8.46.1",
     "eslint": "^9.34.0",
     "eslint-import-resolver-exports": "^1.0.0-beta.5",
     "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "globals": "^16.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",

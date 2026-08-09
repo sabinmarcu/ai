@@ -58,6 +58,7 @@ async function createMonorepo(): Promise<string> {
     dependencies: {
       eslint: '^9.0.0',
       react: '^19.0.0',
+      'react-dom': '^19.0.0',
     },
   }), 'utf8');
   await writeFile(path.join(root, 'packages', 'app', 'tsconfig.json'), '{}', 'utf8');
@@ -67,6 +68,7 @@ async function createMonorepo(): Promise<string> {
     dependencies: {
       eslint: '^9.0.0',
       react: '^19.0.0',
+      'react-dom': '^19.0.0',
       typescript: '^5.0.0',
     },
   }), 'utf8');
@@ -80,6 +82,10 @@ async function createMonorepo(): Promise<string> {
   await writeFile(path.join(root, 'packages', 'tool', 'package.json'), JSON.stringify({
     name: 'fixture-tool',
     bin: './dist/cli.js',
+    dependencies: {
+      ink: '^7.0.0',
+      react: '^19.0.0',
+    },
     devDependencies: {
       '@types/node': '^24.0.0',
       typescript: '^5.0.0',
@@ -112,7 +118,7 @@ test('detects modules independently for repository and workspace targets', async
   expect(detection.targets[1]).not.toHaveProperty('role');
   expect(detection.targets[1].modules.map((module) => module.id)).not.toContain('arch/node-root-package');
   expect(detection.targets[1].modules.map((module) => module.id)).toContain('arch/web-application');
-  expect(detection.targets[1].modules.map((module) => module.id)).toContain('arch/web-react');
+  expect(detection.targets[1].modules.map((module) => module.id)).toContain('arch/react');
   expect(detection.targets[1].modules.map((module) => module.id)).toContain('tooling/eslint');
   expect(detection.targets[1].modules.map((module) => module.id)).not.toContain('lang/typescript');
   expect(detection.targets[1].modules.find((module) => module.id === 'tooling/eslint')?.evidence).toContainEqual({
@@ -124,6 +130,9 @@ test('detects modules independently for repository and workspace targets', async
   expect(detection.targets[2].modules.map((module) => module.id)).toContain('arch/node-library');
   expect(detection.targets[3].modules.map((module) => module.id)).toContain('arch/node-tool');
   expect(detection.targets[3].modules.map((module) => module.id)).toContain('arch/node-library');
+  expect(detection.targets[3].modules.map((module) => module.id)).toContain('arch/react');
+  expect(detection.targets[3].modules.map((module) => module.id)).not.toContain('guardrails/web-platform');
+  expect(detection.targets[3].modules.map((module) => module.id)).not.toContain('guardrails/web-style');
   expect(detection.targets[4].modules.map((module) => module.id)).toContain('arch/web-library');
   expect(detection.targets[4].modules.map((module) => module.id)).not.toContain('arch/node-library');
 });

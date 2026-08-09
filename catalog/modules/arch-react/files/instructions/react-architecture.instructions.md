@@ -1,9 +1,9 @@
 ---
-description: "Web React component, state, model, data, and effect architecture."
+description: "Renderer-neutral React component, state, model, data, and effect architecture."
 applyTo: "**/*.{ts,tsx,js,jsx}"
 ---
 
-# Web React Architecture
+# React Architecture
 
 ## Component Ownership
 
@@ -20,7 +20,7 @@ applyTo: "**/*.{ts,tsx,js,jsx}"
 - Use React hooks for state owned by one component.
 - Use React hooks plus Context when one parent owns complex state that must be available throughout only that parent's descendant subtree.
 - Use Jotai when state is consumed by more than one independently owned component or feature.
-- Use Jotai when state must persist for later use through local storage, query-string state, or another storage adapter.
+- Use Jotai when state must persist for later use through an appropriate storage adapter.
 - Use derived atoms for values computed from shared atoms instead of synchronizing duplicate state.
 - Do not promote subtree-local state to global atoms merely to avoid a provider.
 - Expose focused hooks around Context and nontrivial atom groups so consumers depend on intent rather than storage details.

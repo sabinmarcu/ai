@@ -31,6 +31,7 @@ Before working in this repository, open, read, and follow every linked file belo
 - [arch/node-root-package: node-root-package-architecture.instructions.md](../catalog/modules/arch-node-root-package/files/instructions/node-root-package-architecture.instructions.md)
 - [arch/node-package-application: node-package-application-architecture.instructions.md](../catalog/modules/arch-node-package-application/files/instructions/node-package-application-architecture.instructions.md)
 - [arch/node-tool: node-tool-architecture.instructions.md](../catalog/modules/arch-node-tool/files/instructions/node-tool-architecture.instructions.md)
+- [arch/react: react-architecture.instructions.md](../catalog/modules/arch-react/files/instructions/react-architecture.instructions.md)
 - [lang/typescript: typescript-architecture.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-architecture.instructions.md)
 - [lang/typescript: typescript-function-namespace-types.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-function-namespace-types.instructions.md)
 - [lang/typescript: typescript-build-and-scripts.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-build-and-scripts.instructions.md)
@@ -48,6 +49,7 @@ Before working in this repository, open, read, and follow every linked file belo
 - [mixin/husky-commitlint: husky-commitlint.instructions.md](../catalog/mixins/husky-commitlint/files/instructions/husky-commitlint.instructions.md)
 - [mixin/husky-lint-staged: husky-lint-staged.instructions.md](../catalog/mixins/husky-lint-staged/files/instructions/husky-lint-staged.instructions.md)
 - [mixin/husky-typescript: husky-typescript.instructions.md](../catalog/mixins/husky-typescript/files/instructions/husky-typescript.instructions.md)
+- [mixin/react-eslint: react-eslint.instructions.md](../catalog/mixins/react-eslint/files/instructions/react-eslint.instructions.md)
 - [mixin/typescript-eslint: typescript-eslint.instructions.md](../catalog/mixins/typescript-eslint/files/instructions/typescript-eslint.instructions.md)
 - [mixin/typescript-library: typescript-library.instructions.md](../catalog/mixins/typescript-library/files/instructions/typescript-library.instructions.md)
 
@@ -70,6 +72,7 @@ Before working in this repository, open, read, and follow every linked file belo
 - `.github/instructions/local/node-root-package/`
 - `.github/instructions/local/node-package-application/`
 - `.github/instructions/local/node-tool/`
+- `.github/instructions/local/react/`
 - `.github/instructions/local/typescript/`
 - `.github/instructions/local/yarn/`
 - `.github/instructions/local/mixins/commitlint-conventional-commits/`
@@ -77,6 +80,7 @@ Before working in this repository, open, read, and follow every linked file belo
 - `.github/instructions/local/mixins/husky-commitlint/`
 - `.github/instructions/local/mixins/husky-lint-staged/`
 - `.github/instructions/local/mixins/husky-typescript/`
+- `.github/instructions/local/mixins/react-eslint/`
 - `.github/instructions/local/mixins/typescript-eslint/`
 - `.github/instructions/local/mixins/typescript-library/`
 

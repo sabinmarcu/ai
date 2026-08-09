@@ -1,0 +1,20 @@
+{
+    "id": "mixin/web-react-eslint",
+    "name": "Web React ESLint Integration",
+    "description": "Web accessibility linting for React projects using the shared ESLint configuration.",
+    "version": "0.1.0",
+    "managedPaths": [
+        ".github/instructions/shared/mixins/web-react-eslint/"
+    ],
+    "sourceAssets": [
+        "files/instructions/web-react-eslint.instructions.md"
+    ],
+    "overridePaths": [
+        ".github/instructions/local/mixins/web-react-eslint/"
+    ],
+    "requiresAll": [
+        "arch/react",
+        "guardrails/web-platform",
+        "tooling/eslint"
+    ]
+}
