@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -eu
+
+script_path=$0
+while [ -L "$script_path" ]; do
+	script_directory=$(CDPATH= cd -P "$(dirname "$script_path")" && pwd)
+	script_path=$(readlink "$script_path")
+	case $script_path in
+		/*) ;;
+		*) script_path=$script_directory/$script_path ;;
+	esac
+done
+
+package_root=$(CDPATH= cd -P "$(dirname "$script_path")/.." && pwd)
+
+if [ -f "$package_root/.pnp.cjs" ]; then
+	exec node \
+		--require "$package_root/.pnp.cjs" \
+		--loader "$package_root/.pnp.loader.mjs" \
+		"$package_root/dist/cli.js" "$@"
+fi
+
+exec node "$package_root/dist/cli.js" "$@"
