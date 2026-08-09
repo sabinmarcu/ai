@@ -30,11 +30,17 @@ export function ModuleList({
   onExit,
 }: ModuleListProps) {
   const { stdout } = useStdout();
+  const [grouped, setGrouped] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useInput((input, key) => {
     if (input === 'q' || (key.ctrl && input === 'c')) {
       onExit();
+      return;
+    }
+
+    if (input === 'g' && !key.shift) {
+      setGrouped((current) => !current);
       return;
     }
 
@@ -48,7 +54,7 @@ export function ModuleList({
       return;
     }
 
-    if (input === 'g' && !key.shift) {
+    if (input === '0') {
       setSelectedIndex(0);
       return;
     }
@@ -68,15 +74,27 @@ export function ModuleList({
 
   return (
     <Box flexDirection="column">
-      {visibleModules.map((module, index) => (
-        <ModuleRow
-          key={module.id}
-          module={module}
-          selected={windowStart + index === selectedIndex}
-        />
-      ))}
+      {visibleModules.map((module, index) => {
+        const absoluteIndex = windowStart + index;
+        const type = module.id.split('/')[0] ?? module.id;
+        const previousModule = modules[absoluteIndex - 1];
+        const previousType = previousModule?.id.split('/')[0] ?? previousModule?.id;
+        const showGroup = grouped && (index === 0 || type !== previousType);
+
+        return (
+          <Box key={module.id} flexDirection="column">
+            {showGroup && <Text bold dimColor>{type}</Text>}
+            <ModuleRow
+              module={module}
+              selected={absoluteIndex === selectedIndex}
+            />
+          </Box>
+        );
+      })}
       <Box marginTop={1}>
-        <Text dimColor>↑/k up  ↓/j down  g/G first/last  q quit</Text>
+        <Text dimColor>
+          ↑/k up  ↓/j down  0/G first/last  g {grouped ? 'simple' : 'grouped'}  q quit
+        </Text>
       </Box>
     </Box>
   );
