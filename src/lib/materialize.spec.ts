@@ -176,6 +176,34 @@ test('refuses to replace untracked files or remove drifted stale files', async (
   await expect(readFile(stalePath, 'utf8')).resolves.toBe('drifted\n');
 });
 
+test('force applies over untracked files and removes drifted stale files', async () => {
+  const module = await createModule();
+  const catalog: Catalog = {
+    modules: new Map([[module.id, module]]),
+    mixins: new Map(),
+    presets: new Map(),
+  };
+  const plan = await buildMaterializationPlan(catalog, {
+    effectiveModules: [module.id],
+    activeMixins: [],
+  });
+  const targetRoot = await mkdtemp(path.join(os.tmpdir(), 'ai-lib-force-'));
+  temporaryRoots.push(targetRoot);
+  const managedPath = path.join(targetRoot, plan[0]?.targetPath ?? '');
+  await mkdir(path.dirname(managedPath), { recursive: true });
+  await writeFile(managedPath, 'untracked\n', 'utf8');
+
+  await applyMaterialization(targetRoot, plan, { force: true });
+  await expect(readFile(managedPath, 'utf8')).resolves.toBe(plan[0]?.content);
+
+  await writeFile(managedPath, 'drifted\n', 'utf8');
+  await expect(applyMaterialization(targetRoot, [], { force: true })).resolves.toEqual({
+    files: 0,
+    removed: 3,
+  });
+  await expect(readFile(managedPath, 'utf8')).rejects.toMatchObject({ code: 'ENOENT' });
+});
+
 test('removes a deactivated mixin without removing active module files', async () => {
   const module = await createModule();
   const mixinRoot = await mkdtemp(path.join(os.tmpdir(), 'ai-lib-mixin-'));

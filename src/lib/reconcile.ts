@@ -101,6 +101,22 @@ export function proposeStackSelection(
   };
 }
 
+export interface StackRepair {
+  removedModules: string[];
+  stack: StackConfig;
+}
+
+export function repairUnknownModules(catalog: Catalog, stack: StackConfig): StackRepair {
+  const removedModules = stack.modules.filter((moduleId) => !catalog.modules.has(moduleId));
+  return {
+    removedModules,
+    stack: {
+      ...stack,
+      modules: stack.modules.filter((moduleId) => catalog.modules.has(moduleId)),
+    },
+  };
+}
+
 export async function planReconciliation(
   cwd: string,
   catalog: Catalog,
@@ -160,8 +176,9 @@ export async function planReconciliation(
 export async function applyReconciliation(
   cwd: string,
   plan: ReconciliationPlan,
+  options: { force?: boolean } = {},
 ): Promise<ApplyReconciliationResult> {
-  const result = await applyMaterialization(cwd, plan.materializationPlan);
+  const result = await applyMaterialization(cwd, plan.materializationPlan, options);
   await writeStack(cwd, plan.proposedStack);
   const addedRootReference = await ensureRootEntrypointReference(cwd);
   return {

@@ -19,9 +19,17 @@ Use this skill after changing files under `catalog/modules/`.
    project target results as authoritative; do not infer applicability from
    memory or flatten unrelated target scopes.
 3. Present all proposed selection, dependency, mixin, managed-file, drift, and
-   local-override changes. Obtain user approval before applying them.
-4. After approval, run `yarn cli reconcile --apply`. Do not edit
-   `.ai/stack.yml`, `.ai/materialized.yml`, or `.ai/AGENTS.md` directly.
+   local-override changes. Follow the stack reconciliation skill's diagnostic
+   classification: propose `yarn cli reconcile --repair` for unknown modules
+   or `drifted`, `stale-drifted`, or `untracked` errors; otherwise propose
+   `yarn cli reconcile --apply`. Explain why the selected action is required,
+   including affected paths and destructive consequences for repair, and
+   obtain explicit user approval for that exact command.
+4. After approval, run the proposed command. If the preview changes before
+   execution, classify it again and obtain fresh approval rather than silently
+   changing actions. Do not edit `.ai/stack.yml`, `.ai/materialized.yml`, or
+   `.ai/AGENTS.md` directly. Treat only the command's post-mutation report as
+   the resulting reconciliation state.
 5. Run `yarn cli status`, then read and apply every newly linked AI asset in
    `.ai/AGENTS.md` for the remainder of the task. Do not edit shared catalog
    assets merely to reconcile the generated surface.

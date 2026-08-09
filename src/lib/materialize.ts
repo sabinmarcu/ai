@@ -477,13 +477,14 @@ export async function inspectMaterialization(
 export async function applyMaterialization(
   cwd: string,
   plan: PlannedManagedFile[],
+  options: { force?: boolean } = {},
 ): Promise<ApplyMaterializationResult> {
   const state = await readMaterializationState(cwd);
   const stateByPath = new Map((state?.files ?? []).map((file) => [file.path, file]));
   const desiredPaths = new Set(plan.map((file) => file.targetPath));
 
   for (const plannedFile of plan) {
-    if (!stateByPath.has(plannedFile.targetPath)) {
+    if (!options.force && !stateByPath.has(plannedFile.targetPath)) {
       const content = await readOptionalFile(path.join(cwd, plannedFile.targetPath));
       if (content !== null && hashContent(content) !== plannedFile.hash) {
         throw new Error(`Refusing to overwrite untracked file at managed path: ${plannedFile.targetPath}`);
@@ -494,7 +495,7 @@ export async function applyMaterialization(
   const staleFiles = (state?.files ?? []).filter((file) => !desiredPaths.has(file.path));
   for (const staleFile of staleFiles) {
     const content = await readOptionalFile(path.join(cwd, staleFile.path));
-    if (content !== null && hashContent(content) !== staleFile.hash) {
+    if (!options.force && content !== null && hashContent(content) !== staleFile.hash) {
       throw new Error(`Refusing to remove drifted stale managed file: ${staleFile.path}`);
     }
   }

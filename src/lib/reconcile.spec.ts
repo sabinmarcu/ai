@@ -23,6 +23,7 @@ import {
   applyReconciliation,
   planReconciliation,
   proposeStackSelection,
+  repairUnknownModules,
 } from './reconcile.js';
 import { readStack } from './stack.js';
 
@@ -90,6 +91,31 @@ test('reconciles detector-backed selections while preserving presets and manual 
     ...stack,
     modules: ['detected/new', 'manual/only'],
   });
+});
+
+test('repairs unknown modules without changing valid selections', () => {
+  const validModule = createModule('manual/valid', false);
+  const catalog: Catalog = {
+    modules: new Map([[validModule.id, validModule]]),
+    mixins: new Map(),
+    presets: new Map(),
+  };
+  const stack: StackConfig = {
+    version: 2,
+    createdAt: '2026-08-08T00:00:00.000Z',
+    assetMode: 'materialized',
+    presets: [],
+    modules: ['manual/valid', 'removed/first', 'removed/second'],
+  };
+
+  expect(repairUnknownModules(catalog, stack)).toEqual({
+    removedModules: ['removed/first', 'removed/second'],
+    stack: {
+      ...stack,
+      modules: ['manual/valid'],
+    },
+  });
+  expect(stack.modules).toEqual(['manual/valid', 'removed/first', 'removed/second']);
 });
 
 test('previews without mutation and applies the proposed stack and managed assets', async () => {
