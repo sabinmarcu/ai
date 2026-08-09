@@ -125,7 +125,7 @@ test('previews without mutation and applies the proposed stack and managed asset
     '# Existing\n\nKeep this.',
   );
   await expect(readFile(path.join(root, '.ai', 'AGENTS.md'), 'utf8')).resolves.toContain(
-    '## Managed Shared Assets',
+    '## Required Shared Instructions',
   );
 });
 

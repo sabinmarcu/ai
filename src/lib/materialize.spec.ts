@@ -247,13 +247,14 @@ test('includes baseline infrastructure and generates deterministic asset and ove
   ]);
   const entrypoint = plan[1]?.content ?? '';
   expect(entrypoint).toContain(
-    '[test/base](../.github/instructions/shared/base/base.instructions.md)',
+    '[test/base: base.instructions.md](../.github/instructions/shared/base/base.instructions.md)',
   );
+  expect(entrypoint).toContain('## Required Shared Instructions');
+  expect(entrypoint).toContain('open, read, and follow every linked file below');
   expect(entrypoint).toContain('`.github/instructions/local/base/`');
   expect(entrypoint).not.toContain('# Base');
-  for (const managedFile of plan.slice(2)) {
-    expect(entrypoint).toContain(`../${managedFile.targetPath}`);
-  }
+  expect(entrypoint).toContain('[test/base: SKILL.md](../.github/skills/release/SKILL.md)');
+  expect(entrypoint).not.toContain('../.github/skills/release/assets/template.md');
 });
 
 test('materializes baseline infrastructure with an otherwise empty stack', async () => {
@@ -373,7 +374,7 @@ test('source mode writes only the entrypoint with repository-relative source lin
 
   expect(plan).toHaveLength(1);
   expect(plan[0]?.targetPath).toBe('.ai/AGENTS.md');
-  expect(plan[0]?.content).toContain('## Catalog Source Assets');
+  expect(plan[0]?.content).toContain('## Required Shared Instructions');
   expect(plan[0]?.content).toContain('../catalog/bootstrap/skills/stack-reconciliation/SKILL.md');
   expect(plan[0]?.content).toContain(
     '../catalog/modules/test-base/files/instructions/base.instructions.md',

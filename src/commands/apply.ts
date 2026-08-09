@@ -19,7 +19,7 @@ export class ApplyCommand extends Command {
   async execute(): Promise<number> {
     const stack = await readStack(process.cwd());
     if (!stack) {
-      throw new Error('No .ai/stack.yml found. Run `ai-lib init` first.');
+      throw new Error('No .ai/stack.yml found. Run `ai init` first.');
     }
 
     const catalog = await loadStackCatalog(process.cwd(), stack);

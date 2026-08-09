@@ -1,7 +1,7 @@
 version: 1
 files:
   - path: .ai/AGENTS.md
-    hash: b4336b1a8c2e30c4f04196b06b700f65fbbefc16a9240cdeba56488207e95b07
+    hash: 84502e2517c6fff251b129b4056e0a45eac82ab67ab77b174d2fb6ff38133f26
     ownerId: baseline/entrypoint
     ownerType: baseline
     ownerVersion: "1"

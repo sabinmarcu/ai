@@ -4,46 +4,52 @@
 
 ## Reconciliation
 
-- Use the [stack reconciliation skill](../catalog/bootstrap/skills/stack-reconciliation/SKILL.md) after repository changes may alter module applicability.
+Use the [stack reconciliation skill](../catalog/bootstrap/skills/stack-reconciliation/SKILL.md) after repository changes may alter module applicability.
 - Use the CLI workflow from that skill; do not edit managed files or stack state directly.
 
-## Catalog Source Assets
+## Required Shared Instructions
 
-- [baseline/stack-reconciliation](../catalog/bootstrap/skills/stack-reconciliation/SKILL.md)
-- [guidance/commits](../catalog/modules/guidance-commits/files/instructions/commits.instructions.md)
-- [guidance/conventional-commits](../catalog/modules/guidance-conventional-commits/files/instructions/conventional-commits.instructions.md)
-- [global/core](../catalog/modules/global-core/files/instructions/global-repo-local-agent-notes.instructions.md)
-- [global/core](../catalog/modules/global-core/files/instructions/global-repo-tmp.instructions.md)
-- [arch/node-package](../catalog/modules/arch-node-package/files/instructions/node-package-architecture.instructions.md)
-- [arch/node-package](../catalog/modules/arch-node-package/files/instructions/node-package-package-managers.instructions.md)
-- [arch/node-package](../catalog/modules/arch-node-package/files/instructions/node-package-proto.instructions.md)
-- [arch/node-package](../catalog/modules/arch-node-package/files/instructions/node-package-eslint-prettier-policy.instructions.md)
-- [arch/node-package](../catalog/modules/arch-node-package/files/instructions/node-package-editor-prettier-disable.instructions.md)
-- [arch/node-package-library](../catalog/modules/arch-node-package-library/files/instructions/node-package-library-architecture.instructions.md)
-- [arch/node-library](../catalog/modules/arch-node-library/files/instructions/node-library-architecture.instructions.md)
-- [tooling/commitlint](../catalog/modules/tooling-commitlint/files/instructions/commitlint-configuration.instructions.md)
-- [tooling/eslint](../catalog/modules/tooling-eslint/files/instructions/eslint-configuration.instructions.md)
-- [tooling/husky](../catalog/modules/tooling-husky/files/instructions/husky-configuration.instructions.md)
-- [tooling/lint-staged](../catalog/modules/tooling-lint-staged/files/instructions/lint-staged-configuration.instructions.md)
-- [arch/node-root-package](../catalog/modules/arch-node-root-package/files/instructions/node-root-package-architecture.instructions.md)
-- [arch/node-package-application](../catalog/modules/arch-node-package-application/files/instructions/node-package-application-architecture.instructions.md)
-- [arch/node-tool](../catalog/modules/arch-node-tool/files/instructions/node-tool-architecture.instructions.md)
-- [lang/typescript](../catalog/modules/lang-typescript/files/instructions/typescript-architecture.instructions.md)
-- [lang/typescript](../catalog/modules/lang-typescript/files/instructions/typescript-function-namespace-types.instructions.md)
-- [lang/typescript](../catalog/modules/lang-typescript/files/instructions/typescript-build-and-scripts.instructions.md)
-- [lang/typescript](../catalog/modules/lang-typescript/files/instructions/typescript-tsconfig-layout.instructions.md)
-- [lang/typescript](../catalog/modules/lang-typescript/files/instructions/typescript-runtime-validation.instructions.md)
-- [lang/typescript](../catalog/modules/lang-typescript/files/instructions/typescript-node-api-typings.instructions.md)
-- [lang/typescript](../catalog/modules/lang-typescript/files/instructions/typescript-native-execution.instructions.md)
-- [lang/typescript](../catalog/modules/lang-typescript/files/instructions/typescript-testing.instructions.md)
-- [tooling/yarn](../catalog/modules/tooling-yarn/files/instructions/yarn-configuration.instructions.md)
-- [mixin/commitlint-conventional-commits](../catalog/mixins/commitlint-conventional-commits/files/instructions/commitlint-conventional-commits.instructions.md)
-- [mixin/eslint-lint-staged](../catalog/mixins/eslint-lint-staged/files/instructions/eslint-lint-staged.instructions.md)
-- [mixin/husky-commitlint](../catalog/mixins/husky-commitlint/files/instructions/husky-commitlint.instructions.md)
-- [mixin/husky-lint-staged](../catalog/mixins/husky-lint-staged/files/instructions/husky-lint-staged.instructions.md)
-- [mixin/husky-typescript](../catalog/mixins/husky-typescript/files/instructions/husky-typescript.instructions.md)
-- [mixin/typescript-eslint](../catalog/mixins/typescript-eslint/files/instructions/typescript-eslint.instructions.md)
-- [mixin/typescript-library](../catalog/mixins/typescript-library/files/instructions/typescript-library.instructions.md)
+Before working in this repository, open, read, and follow every linked file below. These files are the active shared instruction set, not optional references.
+
+### Module Instructions
+
+- [guidance/commits: commits.instructions.md](../catalog/modules/guidance-commits/files/instructions/commits.instructions.md)
+- [guidance/conventional-commits: conventional-commits.instructions.md](../catalog/modules/guidance-conventional-commits/files/instructions/conventional-commits.instructions.md)
+- [global/core: global-repo-local-agent-notes.instructions.md](../catalog/modules/global-core/files/instructions/global-repo-local-agent-notes.instructions.md)
+- [global/core: global-repo-tmp.instructions.md](../catalog/modules/global-core/files/instructions/global-repo-tmp.instructions.md)
+- [arch/node-package: node-package-architecture.instructions.md](../catalog/modules/arch-node-package/files/instructions/node-package-architecture.instructions.md)
+- [arch/node-package: node-package-package-managers.instructions.md](../catalog/modules/arch-node-package/files/instructions/node-package-package-managers.instructions.md)
+- [arch/node-package: node-package-proto.instructions.md](../catalog/modules/arch-node-package/files/instructions/node-package-proto.instructions.md)
+- [arch/node-package: node-package-eslint-prettier-policy.instructions.md](../catalog/modules/arch-node-package/files/instructions/node-package-eslint-prettier-policy.instructions.md)
+- [arch/node-package: node-package-editor-prettier-disable.instructions.md](../catalog/modules/arch-node-package/files/instructions/node-package-editor-prettier-disable.instructions.md)
+- [arch/node-package-library: node-package-library-architecture.instructions.md](../catalog/modules/arch-node-package-library/files/instructions/node-package-library-architecture.instructions.md)
+- [arch/node-library: node-library-architecture.instructions.md](../catalog/modules/arch-node-library/files/instructions/node-library-architecture.instructions.md)
+- [tooling/commitlint: commitlint-configuration.instructions.md](../catalog/modules/tooling-commitlint/files/instructions/commitlint-configuration.instructions.md)
+- [tooling/eslint: eslint-configuration.instructions.md](../catalog/modules/tooling-eslint/files/instructions/eslint-configuration.instructions.md)
+- [tooling/husky: husky-configuration.instructions.md](../catalog/modules/tooling-husky/files/instructions/husky-configuration.instructions.md)
+- [tooling/lint-staged: lint-staged-configuration.instructions.md](../catalog/modules/tooling-lint-staged/files/instructions/lint-staged-configuration.instructions.md)
+- [arch/node-root-package: node-root-package-architecture.instructions.md](../catalog/modules/arch-node-root-package/files/instructions/node-root-package-architecture.instructions.md)
+- [arch/node-package-application: node-package-application-architecture.instructions.md](../catalog/modules/arch-node-package-application/files/instructions/node-package-application-architecture.instructions.md)
+- [arch/node-tool: node-tool-architecture.instructions.md](../catalog/modules/arch-node-tool/files/instructions/node-tool-architecture.instructions.md)
+- [lang/typescript: typescript-architecture.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-architecture.instructions.md)
+- [lang/typescript: typescript-function-namespace-types.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-function-namespace-types.instructions.md)
+- [lang/typescript: typescript-build-and-scripts.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-build-and-scripts.instructions.md)
+- [lang/typescript: typescript-tsconfig-layout.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-tsconfig-layout.instructions.md)
+- [lang/typescript: typescript-runtime-validation.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-runtime-validation.instructions.md)
+- [lang/typescript: typescript-node-api-typings.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-node-api-typings.instructions.md)
+- [lang/typescript: typescript-native-execution.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-native-execution.instructions.md)
+- [lang/typescript: typescript-testing.instructions.md](../catalog/modules/lang-typescript/files/instructions/typescript-testing.instructions.md)
+- [tooling/yarn: yarn-configuration.instructions.md](../catalog/modules/tooling-yarn/files/instructions/yarn-configuration.instructions.md)
+
+### Mixin Instructions
+
+- [mixin/commitlint-conventional-commits: commitlint-conventional-commits.instructions.md](../catalog/mixins/commitlint-conventional-commits/files/instructions/commitlint-conventional-commits.instructions.md)
+- [mixin/eslint-lint-staged: eslint-lint-staged.instructions.md](../catalog/mixins/eslint-lint-staged/files/instructions/eslint-lint-staged.instructions.md)
+- [mixin/husky-commitlint: husky-commitlint.instructions.md](../catalog/mixins/husky-commitlint/files/instructions/husky-commitlint.instructions.md)
+- [mixin/husky-lint-staged: husky-lint-staged.instructions.md](../catalog/mixins/husky-lint-staged/files/instructions/husky-lint-staged.instructions.md)
+- [mixin/husky-typescript: husky-typescript.instructions.md](../catalog/mixins/husky-typescript/files/instructions/husky-typescript.instructions.md)
+- [mixin/typescript-eslint: typescript-eslint.instructions.md](../catalog/mixins/typescript-eslint/files/instructions/typescript-eslint.instructions.md)
+- [mixin/typescript-library: typescript-library.instructions.md](../catalog/mixins/typescript-library/files/instructions/typescript-library.instructions.md)
 
 ## Repository-Local Override Locations
 

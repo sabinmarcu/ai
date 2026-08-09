@@ -17,7 +17,7 @@ const packageManifest = createRequire(import.meta.url)('../package.json') as { v
 
 const cli = new Cli({
   binaryLabel: 'AI Library CLI',
-  binaryName: 'ai-lib',
+  binaryName: 'ai',
   binaryVersion: packageManifest.version,
 });
 

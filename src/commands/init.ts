@@ -3,10 +3,12 @@ import {
   Option,
 } from 'clipanion';
 import { loadCatalog } from '../lib/catalog.js';
-import { resolveStack } from '../lib/resolve.js';
+import {
+  applyReconciliation,
+  planReconciliation,
+} from '../lib/reconcile.js';
 import {
   STACK_VERSION,
-  writeStack,
 } from '../lib/stack.js';
 import type { StackConfig } from '../types.js';
 
@@ -24,8 +26,8 @@ export class InitCommand extends Command {
     description: 'Create .ai/stack.yml from selected presets and modules.',
     details: [
       'Examples:',
-      '  ai-lib init --preset node-web --module unix/zsh',
-      '  ai-lib init --asset-mode source',
+      '  ai init --preset node-web --module unix/zsh',
+      '  ai init --asset-mode source',
       '',
       'Asset modes: materialized (default) or source.',
     ].join('\n'),
@@ -58,9 +60,7 @@ export class InitCommand extends Command {
       presets: [...new Set(presetIds)].sort(),
       modules: [...new Set(explicitModules)].sort(),
     };
-    const resolution = resolveStack(catalog, selectedStack);
-
-    await writeStack(cwd, {
+    const stack: StackConfig = {
       version: STACK_VERSION,
       createdAt: new Date().toISOString(),
       ...(assetMode === 'source'
@@ -70,9 +70,13 @@ export class InitCommand extends Command {
         } as const
         : { assetMode: 'materialized' } as const),
       ...selectedStack,
-    });
+    };
 
-    this.context.stdout.write(`Wrote .ai/stack.yml with ${resolution.effectiveModules.length} effective modules.\n`);
+    const plan = await planReconciliation(cwd, catalog, stack);
+    const result = await applyReconciliation(cwd, plan);
+
+    this.context.stdout.write(`Initialized AI stack with ${plan.proposedResolution.effectiveModules.length} effective modules.\n`);
+    this.context.stdout.write(`Applied ${result.files} managed files.\n`);
     this.context.stdout.write(`Asset mode: ${assetMode}\n`);
     return 0;
   }

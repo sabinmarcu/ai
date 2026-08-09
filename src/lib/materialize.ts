@@ -207,6 +207,31 @@ function renderEntrypoint(
   targetRoot?: string,
 ): string {
   const overridePaths = new Set<string>();
+  const renderAssetLinks = (
+    ownerType: PlannedManagedFile['ownerType'],
+    include: (file: PlannedManagedFile) => boolean,
+  ): string[] => (
+    catalogPlan
+      .filter((file) => file.ownerType === ownerType && include(file))
+      .map((file) => {
+        const link = assetMode === 'source'
+          ? sourceAssetLink(targetRoot as string, file.sourcePath as string)
+          : `../${file.targetPath}`;
+        return `- [${file.ownerId}: ${path.posix.basename(link)}](${link})`;
+      })
+  );
+  const moduleInstructionLinks = renderAssetLinks(
+    'module',
+    (file) => file.targetPath.startsWith('.github/instructions/'),
+  );
+  const mixinInstructionLinks = renderAssetLinks(
+    'mixin',
+    (file) => file.targetPath.startsWith('.github/instructions/'),
+  );
+  const sharedSkillLinks = [
+    ...renderAssetLinks('module', (file) => file.targetPath.endsWith('/SKILL.md')),
+    ...renderAssetLinks('mixin', (file) => file.targetPath.endsWith('/SKILL.md')),
+  ];
   for (const moduleId of resolution.effectiveModules) {
     for (const overridePath of catalog.modules.get(moduleId)?.overridePaths ?? []) {
       overridePaths.add(overridePath);
@@ -225,18 +250,34 @@ function renderEntrypoint(
     '',
     '## Reconciliation',
     '',
-    `- Use the [stack reconciliation skill](${reconciliationSkillLink}) after repository changes may alter module applicability.`,
+    `Use the [stack reconciliation skill](${reconciliationSkillLink}) after repository changes may alter module applicability.`,
     '- Use the CLI workflow from that skill; do not edit managed files or stack state directly.',
     '',
-    assetMode === 'source' ? '## Catalog Source Assets' : '## Managed Shared Assets',
+    '## Required Shared Instructions',
     '',
-    `- [baseline/stack-reconciliation](${reconciliationSkillLink})`,
-    ...catalogPlan.map((file) => {
-      const link = assetMode === 'source'
-        ? sourceAssetLink(targetRoot as string, file.sourcePath as string)
-        : `../${file.targetPath}`;
-      return `- [${file.ownerId}](${link})`;
-    }),
+    'Before working in this repository, open, read, and follow every linked file below. These files are the active shared instruction set, not optional references.',
+    '',
+    '### Module Instructions',
+    '',
+    ...(moduleInstructionLinks.length > 0
+      ? moduleInstructionLinks
+      : ['- No module instructions are active.']),
+    '',
+    '### Mixin Instructions',
+    '',
+    ...(mixinInstructionLinks.length > 0
+      ? mixinInstructionLinks
+      : ['- No mixin instructions are active.']),
+    ...(sharedSkillLinks.length > 0
+      ? [
+        '',
+        '## Available Shared Skills',
+        '',
+        'Open a skill entrypoint when its description matches the task. Supporting skill assets are resolved from the skill itself.',
+        '',
+        ...sharedSkillLinks,
+      ]
+      : []),
     '',
     '## Repository-Local Override Locations',
     '',
@@ -332,7 +373,7 @@ export async function ensureRootEntrypointReference(cwd: string): Promise<boolea
 
   const reference = [
     '<!-- @sabinmarcu/ai entrypoint -->',
-    'Read the [managed AI stack entrypoint](.ai/AGENTS.md) in addition to these repository instructions.',
+    'You must open, read, and follow the [managed AI stack entrypoint](.ai/AGENTS.md) in addition to these repository instructions.',
   ].join('\n');
   const content = existing === null
     ? `# AGENTS\n\n${reference}\n`
