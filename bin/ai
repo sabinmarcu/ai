@@ -13,8 +13,12 @@ while [ -L "$script_path" ]; do
 done
 
 package_root=$(CDPATH= cd -P "$(dirname "$script_path")/.." && pwd)
+target_root=$(pwd -P)
 
 if [ -f "$package_root/.pnp.cjs" ]; then
+	cd "$package_root"
+	AI_TARGET_ROOT=$target_root
+	export AI_TARGET_ROOT
 	exec node \
 		--require "$package_root/.pnp.cjs" \
 		--loader "$package_root/.pnp.loader.mjs" \

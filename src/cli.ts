@@ -13,6 +13,12 @@ import { StatusCommand } from './commands/status.js';
 import { VerifyCommand } from './commands/verify.js';
 import { withRepoUtilityCacheScope } from './lib/repo-utility-cache.js';
 
+const targetRoot = process.env.AI_TARGET_ROOT;
+if (targetRoot) {
+  Reflect.deleteProperty(process.env, 'AI_TARGET_ROOT');
+  process.chdir(targetRoot);
+}
+
 const packageManifest = createRequire(import.meta.url)('../package.json') as { version: string };
 
 const cli = new Cli({
