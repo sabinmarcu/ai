@@ -81,7 +81,7 @@ test('navigates modules with vim and arrow bindings', async () => {
   stdin.write('G');
   await vi.waitFor(() => expect(selectedModule(lastFrame())).toBe('web/fourth'));
 
-  stdin.write('0');
+  stdin.write('g');
   await vi.waitFor(() => expect(selectedModule(lastFrame())).toBe('arch/first'));
 
   stdin.write('\u001B[A');
@@ -103,11 +103,11 @@ test('toggles type grouping without changing the active module', async () => {
   );
 
   expect(lastFrame()).not.toMatch(/^arch$/mu);
-  expect(lastFrame()).toContain('g grouped');
+  expect(lastFrame()).toContain('t grouped');
 
   stdin.write('j');
   await vi.waitFor(() => expect(selectedModule(lastFrame())).toBe('lang/second'));
-  stdin.write('g');
+  stdin.write('t');
 
   await vi.waitFor(() => {
     expect(selectedModule(lastFrame())).toBe('lang/second');
@@ -115,10 +115,10 @@ test('toggles type grouping without changing the active module', async () => {
     expect(lastFrame()).toMatch(/^lang$/mu);
     expect(lastFrame()).toMatch(/^tooling$/mu);
     expect(lastFrame()).toMatch(/^web$/mu);
-    expect(lastFrame()).toContain('g simple');
+    expect(lastFrame()).toContain('t simple');
   });
 
-  stdin.write('g');
+  stdin.write('t');
   await vi.waitFor(() => {
     expect(selectedModule(lastFrame())).toBe('lang/second');
     expect(lastFrame()).not.toMatch(/^arch$/mu);

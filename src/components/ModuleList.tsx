@@ -39,7 +39,7 @@ export function ModuleList({
       return;
     }
 
-    if (input === 'g' && !key.shift) {
+    if (input === 't') {
       setGrouped((current) => !current);
       return;
     }
@@ -54,7 +54,7 @@ export function ModuleList({
       return;
     }
 
-    if (input === '0') {
+    if (input === 'g' && !key.shift) {
       setSelectedIndex(0);
       return;
     }
@@ -93,7 +93,7 @@ export function ModuleList({
       })}
       <Box marginTop={1}>
         <Text dimColor>
-          ↑/k up  ↓/j down  0/G first/last  g {grouped ? 'simple' : 'grouped'}  q quit
+          ↑/k up  ↓/j down  g/G first/last  t {grouped ? 'simple' : 'grouped'}  q quit
         </Text>
       </Box>
     </Box>
