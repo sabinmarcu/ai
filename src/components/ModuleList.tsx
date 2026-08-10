@@ -31,10 +31,54 @@ export function ModuleList({
 }: ModuleListProps) {
   const { stdout } = useStdout();
   const [grouped, setGrouped] = useState(false);
+  const [query, setQuery] = useState('');
+  const [searching, setSearching] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredModules = normalizedQuery.length === 0
+    ? modules
+    : modules.filter((module) => (
+      module.id.toLowerCase().includes(normalizedQuery)
+        || module.name.toLowerCase().includes(normalizedQuery)
+        || module.description.toLowerCase().includes(normalizedQuery)
+    ));
 
   useInput((input, key) => {
-    if (input === 'q' || (key.ctrl && input === 'c')) {
+    if (key.ctrl && input === 'c') {
+      onExit();
+      return;
+    }
+
+    if (key.escape) {
+      setSearching(false);
+      setQuery('');
+      setSelectedIndex(0);
+      return;
+    }
+
+    if (searching) {
+      if (key.return) {
+        setSearching(false);
+        return;
+      }
+      if (key.backspace || key.delete) {
+        setQuery((current) => current.slice(0, -1));
+        setSelectedIndex(0);
+        return;
+      }
+      if (!key.ctrl && !key.meta && input.length > 0) {
+        setQuery((current) => current + input);
+        setSelectedIndex(0);
+      }
+      return;
+    }
+
+    if (input === '/') {
+      setSearching(true);
+      return;
+    }
+
+    if (input === 'q') {
       onExit();
       return;
     }
@@ -50,7 +94,7 @@ export function ModuleList({
     }
 
     if (key.downArrow || input === 'j') {
-      setSelectedIndex((currentIndex) => Math.min(modules.length - 1, currentIndex + 1));
+      setSelectedIndex((currentIndex) => Math.min(filteredModules.length - 1, currentIndex + 1));
       return;
     }
 
@@ -60,7 +104,7 @@ export function ModuleList({
     }
 
     if (input === 'G' || (input === 'g' && key.shift)) {
-      setSelectedIndex(Math.max(0, modules.length - 1));
+      setSelectedIndex(Math.max(0, filteredModules.length - 1));
     }
   });
 
@@ -69,15 +113,16 @@ export function ModuleList({
   }
 
   const viewportHeight = Math.max(1, (stdout.rows ?? 24) - 12);
-  const windowStart = Math.min(selectedIndex, Math.max(0, modules.length - viewportHeight));
-  const visibleModules = modules.slice(windowStart, windowStart + viewportHeight);
+  const windowStart = Math.min(selectedIndex, Math.max(0, filteredModules.length - viewportHeight));
+  const visibleModules = filteredModules.slice(windowStart, windowStart + viewportHeight);
 
   return (
     <Box flexDirection="column">
+      {filteredModules.length === 0 && <Text dimColor>No modules match “{query}”.</Text>}
       {visibleModules.map((module, index) => {
         const absoluteIndex = windowStart + index;
         const type = module.id.split('/')[0] ?? module.id;
-        const previousModule = modules[absoluteIndex - 1];
+        const previousModule = filteredModules[absoluteIndex - 1];
         const previousType = previousModule?.id.split('/')[0] ?? previousModule?.id;
         const showGroup = grouped && (index === 0 || type !== previousType);
 
@@ -92,9 +137,13 @@ export function ModuleList({
         );
       })}
       <Box marginTop={1}>
-        <Text dimColor>
-          ↑/k up  ↓/j down  g/G first/last  t {grouped ? 'simple' : 'grouped'}  q quit
-        </Text>
+        {searching
+          ? <Text>/{query}<Text color="cyan">█</Text>  <Text dimColor>enter lock  esc clear</Text></Text>
+          : (
+              <Text dimColor>
+                ↑/k up  ↓/j down  g/G first/last  t {grouped ? 'simple' : 'grouped'}  / search{query ? ` “${query}”  esc clear` : ''}  q quit
+              </Text>
+          )}
       </Box>
     </Box>
   );

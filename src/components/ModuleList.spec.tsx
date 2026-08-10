@@ -125,6 +125,56 @@ test('toggles type grouping without changing the active module', async () => {
   });
 });
 
+test('searches modules live, locks the filter, and clears it with escape', async () => {
+  const { lastFrame, stdin } = render(
+    <ModuleList modules={modules} onExit={vi.fn()} />,
+  );
+
+  stdin.write('/');
+  await vi.waitFor(() => expect(lastFrame()).toContain('/█  enter lock  esc clear'));
+
+  stdin.write('tool');
+  await vi.waitFor(() => {
+    expect(lastFrame()).toContain('/tool█');
+    expect(selectedModule(lastFrame())).toBe('tooling/third');
+    expect(lastFrame()).not.toContain('arch/first');
+  });
+
+  stdin.write('\r');
+  await vi.waitFor(() => {
+    expect(lastFrame()).not.toContain('/tool█');
+    expect(lastFrame()).toContain('/ search “tool”  esc clear');
+    expect(selectedModule(lastFrame())).toBe('tooling/third');
+  });
+
+  stdin.write('\u001B');
+  await vi.waitFor(() => {
+    expect(lastFrame()).not.toContain('esc clear');
+    expect(lastFrame()).toContain('arch/first');
+    expect(selectedModule(lastFrame())).toBe('arch/first');
+  });
+});
+
+test('treats navigation keys as text and supports backspace while searching', async () => {
+  const { lastFrame, stdin } = render(
+    <ModuleList modules={modules} onExit={vi.fn()} />,
+  );
+
+  stdin.write('/');
+  await vi.waitFor(() => expect(lastFrame()).toContain('/█'));
+  stdin.write('j');
+  await vi.waitFor(() => {
+    expect(lastFrame()).toContain('/j█');
+    expect(lastFrame()).toContain('No modules match “j”.');
+  });
+
+  stdin.write('\u007F');
+  await vi.waitFor(() => {
+    expect(lastFrame()).toContain('/█');
+    expect(selectedModule(lastFrame())).toBe('arch/first');
+  });
+});
+
 test('shows a Unicode detail tree beneath the active module', async () => {
   const { lastFrame, stdin } = render(
     <ModuleList modules={modules} onExit={vi.fn()} />,
